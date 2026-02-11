@@ -310,6 +310,58 @@ button.ghost {
   color: var(--muted);
 }
 
+.panel.inspiration {
+  background: linear-gradient(140deg, #f8fafc, #eef2ff);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.tag {
+  background: #e0f2fe;
+  color: #0369a1;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 6px 10px;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+}
+
+.quote {
+  background: #ffffff;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  margin: 12px 0;
+}
+
+.quote-text {
+  margin: 0 0 6px;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.quote-meta {
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.advice-list {
+  margin: 0;
+  padding-left: 20px;
+  color: var(--ink);
+}
+
+.advice-list li {
+  margin-bottom: 8px;
+}
+
 @media (max-width: 720px) {
   .dash-header {
     flex-direction: column;
