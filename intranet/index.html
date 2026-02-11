@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>UX-UI Progress Intranet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg"></div>
+    <main class="app">
+      <header class="hero">
+        <p class="kicker">UX-UI Intranet</p>
+        <h1>Hero Progress Tracker</h1>
+        <p class="subtitle">
+          Log in to track your quest completion and keep momentum every day.
+        </p>
+      </header>
+
+      <section class="card" id="login-card">
+        <h2>Login</h2>
+        <p class="hint">Default user is stored in users.json.</p>
+        <form id="login-form">
+          <label>
+            Username
+            <input type="text" id="username" autocomplete="username" required />
+          </label>
+          <label>
+            Password
+            <input
+              type="password"
+              id="password"
+              autocomplete="current-password"
+              required
+            />
+          </label>
+          <button type="submit">Sign in</button>
+          <p class="error" id="login-error" aria-live="polite"></p>
+        </form>
+      </section>
+
+      <section class="card hidden" id="dashboard">
+        <div class="dash-header">
+          <div>
+            <h2 id="welcome">Welcome</h2>
+            <p class="hint">Progress is stored in your browser.</p>
+          </div>
+          <div class="actions">
+            <button id="export-btn" type="button">Export progress</button>
+            <button id="reset-btn" type="button" class="ghost">Reset</button>
+            <button id="logout-btn" type="button" class="ghost">Logout</button>
+          </div>
+        </div>
+
+        <div class="progress">
+          <div class="progress-bar" id="progress-bar"></div>
+          <div class="progress-meta" id="progress-meta">0% complete</div>
+        </div>
+
+        <div id="task-list" class="task-list"></div>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>

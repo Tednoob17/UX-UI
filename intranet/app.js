@@ -1,0 +1,724 @@
+const usersUrl = "users.json";
+const loginCard = document.getElementById("login-card");
+const dashboard = document.getElementById("dashboard");
+const loginForm = document.getElementById("login-form");
+const loginError = document.getElementById("login-error");
+const welcome = document.getElementById("welcome");
+const taskList = document.getElementById("task-list");
+const progressBar = document.getElementById("progress-bar");
+const progressMeta = document.getElementById("progress-meta");
+const resetBtn = document.getElementById("reset-btn");
+const logoutBtn = document.getElementById("logout-btn");
+const exportBtn = document.getElementById("export-btn");
+
+const tasks = [
+  {
+    section: "UX Quest 1 - Athele, keep hydrated",
+    items: [
+      {
+        id: "ux1-1",
+        label: "User interviews",
+        link: "../subjects/ux/athele-keep-hydrated/user-interviews/README.md",
+      },
+      {
+        id: "ux1-2",
+        label: "Analytics",
+        link: "../subjects/ux/athele-keep-hydrated/analytics/README.md",
+      },
+      {
+        id: "ux1-3",
+        label: "Personas",
+        link: "../subjects/ux/athele-keep-hydrated/personas/README.md",
+      },
+      {
+        id: "ux1-4",
+        label: "User journey",
+        link: "../subjects/ux/athele-keep-hydrated/user-journey/README.md",
+      },
+      {
+        id: "ux1-5",
+        label: "Problem statement",
+        link: "../subjects/ux/athele-keep-hydrated/problem-statement/README.md",
+      },
+      {
+        id: "ux1-6",
+        label: "Ideation",
+        link: "../subjects/ux/athele-keep-hydrated/ideation/README.md",
+      },
+      {
+        id: "ux1-7",
+        label: "Prototyping",
+        link: "../subjects/ux/athele-keep-hydrated/prototyping/README.md",
+      },
+    ],
+  },
+  {
+    section: "UX Quest 2 - Going on holidays with friends",
+    items: [
+      {
+        id: "ux2-1",
+        label: "Interview guide",
+        link: "../subjects/ux/going-on-holidays-with-friends/interview-guide/README.md",
+      },
+      {
+        id: "ux2-2",
+        label: "Run interviews",
+        link: "../subjects/ux/going-on-holidays-with-friends/run-interviews/README.md",
+      },
+      {
+        id: "ux2-3",
+        label: "Affinity diagram",
+        link: "../subjects/ux/going-on-holidays-with-friends/affinity-diagram/README.md",
+      },
+      {
+        id: "ux2-4",
+        label: "Problem statement",
+        link: "../subjects/ux/going-on-holidays-with-friends/problem-statement/README.md",
+      },
+      {
+        id: "ux2-5",
+        label: "Ideation",
+        link: "../subjects/ux/going-on-holidays-with-friends/ideation/README.md",
+      },
+      {
+        id: "ux2-6",
+        label: "User flow",
+        link: "../subjects/ux/going-on-holidays-with-friends/user-flow/README.md",
+      },
+      {
+        id: "ux2-7",
+        label: "Prototyping",
+        link: "../subjects/ux/going-on-holidays-with-friends/prototyping/README.md",
+      },
+    ],
+  },
+  {
+    section: "UX Quest 3 - Lets fight harassment",
+    items: [
+      {
+        id: "ux3-1",
+        label: "Competitive analysis",
+        link: "../subjects/ux/lets-fight-harassment/competitive-analyss/README.md",
+      },
+      {
+        id: "ux3-2",
+        label: "Surveys",
+        link: "../subjects/ux/lets-fight-harassment/surveys/README.md",
+      },
+      {
+        id: "ux3-3",
+        label: "Broadcast strategy",
+        link: "../subjects/ux/lets-fight-harassment/broadcast-stategy/README.md",
+      },
+      {
+        id: "ux3-4",
+        label: "Interviews",
+        link: "../subjects/ux/lets-fight-harassment/interviews/README.md",
+      },
+      {
+        id: "ux3-5",
+        label: "Personas",
+        link: "../subjects/ux/lets-fight-harassment/personas/README.md",
+      },
+      {
+        id: "ux3-6",
+        label: "User journey",
+        link: "../subjects/ux/lets-fight-harassment/user-journey/README.md",
+      },
+      {
+        id: "ux3-7",
+        label: "Problem statement",
+        link: "../subjects/ux/lets-fight-harassment/problem-statement/README.md",
+      },
+    ],
+  },
+  {
+    section: "UX Quest 4 - The Olympics",
+    items: [
+      {
+        id: "ux4-1",
+        label: "Ideation A",
+        link: "../subjects/ux/the-olympics/ideation-a/README.md",
+      },
+      {
+        id: "ux4-2",
+        label: "Ideation B",
+        link: "../subjects/ux/the-olympics/ideation-b/README.md",
+      },
+      {
+        id: "ux4-3",
+        label: "Ideation C",
+        link: "../subjects/ux/the-olympics/ideation-c/README.md",
+      },
+      {
+        id: "ux4-4",
+        label: "User flow",
+        link: "../subjects/ux/the-olympics/user-flow/README.md",
+      },
+      {
+        id: "ux4-5",
+        label: "Prototyping",
+        link: "../subjects/ux/the-olympics/prototyping/README.md",
+      },
+      {
+        id: "ux4-6",
+        label: "Animation",
+        link: "../subjects/ux/the-olympics/animation/README.md",
+      },
+      {
+        id: "ux4-7",
+        label: "Test",
+        link: "../subjects/ux/the-olympics/test/README.md",
+      },
+    ],
+  },
+  {
+    section: "UX Quest 5 - Music on",
+    items: [
+      {
+        id: "ux5-1",
+        label: "Heuristics",
+        link: "../subjects/ux/music-on/heuristics/README.md",
+      },
+      {
+        id: "ux5-2",
+        label: "Site map",
+        link: "../subjects/ux/music-on/site-map/README.md",
+      },
+      {
+        id: "ux5-3",
+        label: "JTBD",
+        link: "../subjects/ux/music-on/jtbd/README.md",
+      },
+      {
+        id: "ux5-4",
+        label: "Card sorting",
+        link: "../subjects/ux/music-on/card-sorting/README.md",
+      },
+      {
+        id: "ux5-5",
+        label: "Wireframes",
+        link: "../subjects/ux/music-on/wireframes/README.md",
+      },
+      {
+        id: "ux5-6",
+        label: "Test protocol",
+        link: "../subjects/ux/music-on/test-protocol/README.md",
+      },
+      {
+        id: "ux5-7",
+        label: "Run 5 tests",
+        link: "../subjects/ux/music-on/run-5-tests/README.md",
+      },
+    ],
+  },
+  {
+    section: "UX Quest 6 - Sunday night movie",
+    items: [
+      {
+        id: "ux6-1",
+        label: "User flow",
+        link: "../subjects/ux/sunday-night-movie/user-flow/README.md",
+      },
+      {
+        id: "ux6-2",
+        label: "Wireframes",
+        link: "../subjects/ux/sunday-night-movie/wireframes/README.md",
+      },
+      {
+        id: "ux6-3",
+        label: "Wireframes animation",
+        link: "../subjects/ux/sunday-night-movie/wireframes-animation/README.md",
+      },
+      {
+        id: "ux6-4",
+        label: "Test feature 1",
+        link: "../subjects/ux/sunday-night-movie/test-feature-1/README.md",
+      },
+      {
+        id: "ux6-5",
+        label: "Test feature 2",
+        link: "../subjects/ux/sunday-night-movie/test-feature-2/README.md",
+      },
+      {
+        id: "ux6-6",
+        label: "Test feature 3",
+        link: "../subjects/ux/sunday-night-movie/test-feature-3/README.md",
+      },
+      {
+        id: "ux6-7",
+        label: "Iteration",
+        link: "../subjects/ux/sunday-night-movie/iteration/README.md",
+      },
+    ],
+  },
+  {
+    section: "UX Quest 7 - Seamstress",
+    items: [
+      {
+        id: "ux7-1",
+        label: "UX strategy",
+        link: "../subjects/ux/seamstress/ux-strategy/README.md",
+      },
+      {
+        id: "ux7-2",
+        label: "Empathy",
+        link: "../subjects/ux/seamstress/empathy/README.md",
+      },
+      {
+        id: "ux7-3",
+        label: "Define",
+        link: "../subjects/ux/seamstress/define/README.md",
+      },
+      {
+        id: "ux7-4",
+        label: "Problem statement",
+        link: "../subjects/ux/seamstress/problem-statement/README.md",
+      },
+      {
+        id: "ux7-5",
+        label: "Ideation",
+        link: "../subjects/ux/seamstress/ideation/README.md",
+      },
+      {
+        id: "ux7-6",
+        label: "Prototype",
+        link: "../subjects/ux/seamstress/prototype/README.md",
+      },
+      {
+        id: "ux7-7",
+        label: "Test",
+        link: "../subjects/ux/seamstress/test/README.md",
+      },
+    ],
+  },
+  {
+    section: "UI Quest 1 - Colors and moodboard",
+    items: [
+      {
+        id: "ui1-1",
+        label: "Find the colors",
+        link: "../subjects/ui/colors-and-moodboard/find-the-colors/README.md",
+      },
+      {
+        id: "ui1-2",
+        label: "Color codes",
+        link: "../subjects/ui/colors-and-moodboard/color-codes/README.md",
+      },
+      {
+        id: "ui1-3",
+        label: "Color combinations",
+        link: "../subjects/ui/colors-and-moodboard/color-combinations/README.md",
+      },
+      {
+        id: "ui1-4",
+        label: "Moodboard",
+        link: "../subjects/ui/colors-and-moodboard/moodboard/README.md",
+      },
+      {
+        id: "ui1-5",
+        label: "Typography",
+        link: "../subjects/ui/colors-and-moodboard/typography/README.md",
+      },
+      {
+        id: "ui1-6",
+        label: "Typography moodboard",
+        link: "../subjects/ui/colors-and-moodboard/typography-moodboard/README.md",
+      },
+      {
+        id: "ui1-7",
+        label: "UI challenge timer",
+        link: "../subjects/ui/colors-and-moodboard/ui-challenge-timer/README.md",
+      },
+      {
+        id: "ui1-8",
+        label: "UI challenge watches",
+        link: "../subjects/ui/colors-and-moodboard/ui-challenge-watches/README.md",
+      },
+      {
+        id: "ui1-9",
+        label: "UI challenge flight",
+        link: "../subjects/ui/colors-and-moodboard/ui-challenge-flight/README.md",
+      },
+      {
+        id: "ui1-10",
+        label: "UI challenge spotify",
+        link: "../subjects/ui/colors-and-moodboard/ui-challenge-spotify/README.md",
+      },
+      {
+        id: "ui1-11",
+        label: "UI challenge bitcoin dashboard",
+        link: "../subjects/ui/colors-and-moodboard/ui-challenge-bitcoin-dashboard/README.md",
+      },
+    ],
+  },
+  {
+    section: "UI Quest 2 - Atomic design",
+    items: [
+      {
+        id: "ui2-1",
+        label: "Browsing",
+        link: "../subjects/ui/atomic-design/browsing/README.md",
+      },
+      {
+        id: "ui2-2",
+        label: "Material design",
+        link: "../subjects/ui/atomic-design/material-design/README.md",
+      },
+      {
+        id: "ui2-3",
+        label: "Design system library",
+        link: "../subjects/ui/atomic-design/design-system-library/README.md",
+      },
+      {
+        id: "ui2-4",
+        label: "Library for climbing addicts",
+        link: "../subjects/ui/atomic-design/library-for-climbing-addicts/README.md",
+      },
+      {
+        id: "ui2-5",
+        label: "Library for a dating app",
+        link: "../subjects/ui/atomic-design/library-for-a-dating-app/README.md",
+      },
+    ],
+  },
+  {
+    section: "UI Quest 3 - Rules",
+    items: [
+      {
+        id: "ui3-1",
+        label: "Grids",
+        link: "../subjects/ui/rules/grids/README.md",
+      },
+      {
+        id: "ui3-2",
+        label: "Multi state",
+        link: "../subjects/ui/rules/multi-state/README.md",
+      },
+      {
+        id: "ui3-3",
+        label: "Accessibility (website)",
+        link: "../subjects/ui/rules/accessbility-website/README.md",
+      },
+      {
+        id: "ui3-4",
+        label: "Accessibility (app)",
+        link: "../subjects/ui/rules/accessbility-app/README.md",
+      },
+      {
+        id: "ui3-5",
+        label: "Breadcrumbs",
+        link: "../subjects/ui/rules/breadcrumbs/README.md",
+      },
+      {
+        id: "ui3-6",
+        label: "Toggle buttons",
+        link: "../subjects/ui/rules/toggle-buttons/README.md",
+      },
+      {
+        id: "ui3-7",
+        label: "Radio buttons",
+        link: "../subjects/ui/rules/radio-buttons/README.md",
+      },
+      {
+        id: "ui3-8",
+        label: "Calendars",
+        link: "../subjects/ui/rules/calendars/README.md",
+      },
+      {
+        id: "ui3-9",
+        label: "Time pickers",
+        link: "../subjects/ui/rules/time-pickers/README.md",
+      },
+      {
+        id: "ui3-10",
+        label: "Micro interactions",
+        link: "../subjects/ui/rules/micro-interactions/README.md",
+      },
+      {
+        id: "ui3-11",
+        label: "Consistency",
+        link: "../subjects/ui/rules/consistency/README.md",
+      },
+    ],
+  },
+  {
+    section: "UI Quest 4 - Building an interface",
+    items: [
+      {
+        id: "ui4-1",
+        label: "Styleguide",
+        link: "../subjects/ui/building-an-interface/styleguide/README.md",
+      },
+      {
+        id: "ui4-2",
+        label: "Design system library",
+        link: "../subjects/ui/building-an-interface/design-system-library/README.md",
+      },
+      {
+        id: "ui4-3",
+        label: "Design screens",
+        link: "../subjects/ui/building-an-interface/design-screens/README.md",
+      },
+      {
+        id: "ui4-4",
+        label: "Animation",
+        link: "../subjects/ui/building-an-interface/animation/README.md",
+      },
+      {
+        id: "ui4-5",
+        label: "Desirability testing",
+        link: "../subjects/ui/building-an-interface/desirability-testing/README.md",
+      },
+    ],
+  },
+  {
+    section: "UI Quest 5 - Heuristics",
+    items: [
+      {
+        id: "ui5-1",
+        label: "Audit",
+        link: "../subjects/ui/heuristics/audit/README.md",
+      },
+      {
+        id: "ui5-2",
+        label: "Recommendations",
+        link: "../subjects/ui/heuristics/recommendations/README.md",
+      },
+    ],
+  },
+  {
+    section: "Projects",
+    items: [
+      {
+        id: "proj1-ux",
+        label: "Project 1 - Get a room (UX)",
+        link: "../subjects/project-get-a-room/ux/README.md",
+      },
+      {
+        id: "proj1-ui",
+        label: "Project 1 - Get a room (UI)",
+        link: "../subjects/project-get-a-room/ui/README.md",
+      },
+      {
+        id: "proj2-ux",
+        label: "Project 2 - Lets do some sports (UX)",
+        link: "../subjects/project-lets-do-some-sports/ux/README.md",
+      },
+      {
+        id: "proj2-ui",
+        label: "Project 2 - Lets do some sports (UI)",
+        link: "../subjects/project-lets-do-some-sports/ui/README.md",
+      },
+      {
+        id: "proj3-ux",
+        label: "Project 3 - Lets fair trade (UX)",
+        link: "../subjects/project-lets-fair-trade/ux/README.md",
+      },
+      {
+        id: "proj3-ui",
+        label: "Project 3 - Lets fair trade (UI)",
+        link: "../subjects/project-lets-fair-trade/ui/README.md",
+      },
+      {
+        id: "proj4-ux",
+        label: "Project 4 - A table (UX)",
+        link: "../subjects/project-a-table/ux/README.md",
+      },
+      {
+        id: "proj4-ui",
+        label: "Project 4 - A table (UI)",
+        link: "../subjects/project-a-table/ui/README.md",
+      },
+    ],
+  },
+];
+
+let currentUser = null;
+let progress = { completed: {} };
+
+const storageKey = (username) => `uxui-progress-${username}`;
+
+const saveCurrentUser = (username) => {
+  localStorage.setItem("uxui-user", username);
+};
+
+const clearCurrentUser = () => {
+  localStorage.removeItem("uxui-user");
+};
+
+const loadProgress = (username) => {
+  const raw = localStorage.getItem(storageKey(username));
+  if (!raw) return { completed: {} };
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && parsed.completed ? parsed : { completed: {} };
+  } catch {
+    return { completed: {} };
+  }
+};
+
+const saveProgress = () => {
+  if (!currentUser) return;
+  localStorage.setItem(storageKey(currentUser.username), JSON.stringify(progress));
+};
+
+const computeTotals = () => {
+  const total = tasks.reduce((sum, section) => sum + section.items.length, 0);
+  const done = Object.values(progress.completed).filter(Boolean).length;
+  return { total, done };
+};
+
+const updateProgressUI = () => {
+  const { total, done } = computeTotals();
+  const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+  progressBar.style.width = `${percent}%`;
+  progressMeta.textContent = `${percent}% complete (${done}/${total})`;
+};
+
+const renderTasks = () => {
+  taskList.innerHTML = "";
+  tasks.forEach((section) => {
+    const sectionEl = document.createElement("div");
+    sectionEl.className = "task-section";
+
+    const title = document.createElement("h3");
+    title.textContent = section.section;
+    sectionEl.appendChild(title);
+
+    section.items.forEach((item) => {
+      const row = document.createElement("div");
+      row.className = "task-item";
+
+      const left = document.createElement("div");
+      left.className = "task-left";
+
+      const checkbox = document.createElement("input");
+      checkbox.type = "checkbox";
+      checkbox.checked = Boolean(progress.completed[item.id]);
+      checkbox.addEventListener("change", () => {
+        progress.completed[item.id] = checkbox.checked;
+        saveProgress();
+        updateProgressUI();
+      });
+
+      const label = document.createElement("span");
+      label.textContent = item.label;
+
+      left.appendChild(checkbox);
+      left.appendChild(label);
+
+      const link = document.createElement("a");
+      link.className = "task-link";
+      link.href = item.link;
+      link.target = "_blank";
+      link.rel = "noopener";
+      link.textContent = "Open";
+
+      row.appendChild(left);
+      row.appendChild(link);
+      sectionEl.appendChild(row);
+    });
+
+    taskList.appendChild(sectionEl);
+  });
+};
+
+const showDashboard = () => {
+  loginCard.classList.add("hidden");
+  dashboard.classList.remove("hidden");
+  welcome.textContent = `Welcome, ${currentUser.displayName}`;
+  progress = loadProgress(currentUser.username);
+  renderTasks();
+  updateProgressUI();
+};
+
+const showLogin = () => {
+  dashboard.classList.add("hidden");
+  loginCard.classList.remove("hidden");
+};
+
+const authenticate = async (username, password) => {
+  const response = await fetch(usersUrl);
+  if (!response.ok) {
+    throw new Error("Unable to load users.json");
+  }
+  const data = await response.json();
+  const match = data.users.find(
+    (user) => user.username === username && user.password === password
+  );
+  return match || null;
+};
+
+loginForm.addEventListener("submit", async (event) => {
+  event.preventDefault();
+  loginError.textContent = "";
+
+  const username = document.getElementById("username").value.trim();
+  const password = document.getElementById("password").value.trim();
+
+  try {
+    const user = await authenticate(username, password);
+    if (!user) {
+      loginError.textContent = "Invalid username or password.";
+      return;
+    }
+    currentUser = user;
+    saveCurrentUser(user.username);
+    showDashboard();
+  } catch (error) {
+    loginError.textContent = error.message;
+  }
+});
+
+logoutBtn.addEventListener("click", () => {
+  currentUser = null;
+  clearCurrentUser();
+  showLogin();
+});
+
+resetBtn.addEventListener("click", () => {
+  if (!currentUser) return;
+  const confirmed = window.confirm("Reset all progress for this user?");
+  if (!confirmed) return;
+  progress = { completed: {} };
+  saveProgress();
+  renderTasks();
+  updateProgressUI();
+});
+
+exportBtn.addEventListener("click", () => {
+  if (!currentUser) return;
+  const payload = {
+    user: currentUser.username,
+    exportedAt: new Date().toISOString(),
+    progress,
+  };
+  const blob = new Blob([JSON.stringify(payload, null, 2)], {
+    type: "application/json",
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = `uxui-progress-${currentUser.username}.json`;
+  link.click();
+  URL.revokeObjectURL(url);
+});
+
+const autoLogin = async () => {
+  const savedUser = localStorage.getItem("uxui-user");
+  if (!savedUser) return;
+  try {
+    const response = await fetch(usersUrl);
+    if (!response.ok) return;
+    const data = await response.json();
+    const user = data.users.find((entry) => entry.username === savedUser);
+    if (!user) return;
+    currentUser = user;
+    showDashboard();
+  } catch {
+    showLogin();
+  }
+};
+
+autoLogin();
