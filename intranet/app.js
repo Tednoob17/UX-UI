@@ -1,4 +1,3 @@
-const usersUrl = "users.json";
 const loginCard = document.getElementById("login-card");
 const dashboard = document.getElementById("dashboard");
 const loginForm = document.getElementById("login-form");
@@ -546,7 +545,11 @@ const tasks = [
 
 let currentUser = null;
 let progress = { completed: {}, activityDates: [], timeBySection: {} };
-let adminUser = null;
+const adminUser = {
+  username: "admin",
+  password: "60d8d9e58413edd583caaf8091d364d8425723bb0088f1385456110aa9600cc5",
+  displayName: "Admin",
+};
 
 const localUsersKey = "uxui-local-users";
 
@@ -575,16 +578,7 @@ const saveLocalUsers = (users) => {
   localStorage.setItem(localUsersKey, JSON.stringify(users));
 };
 
-const loadAdminUser = async () => {
-  if (adminUser) return adminUser;
-  const response = await fetch(usersUrl);
-  if (!response.ok) {
-    throw new Error("Unable to load users.json");
-  }
-  const data = await response.json();
-  adminUser = data.users && data.users.length ? data.users[0] : null;
-  return adminUser;
-};
+const loadAdminUser = async () => adminUser;
 
 const loadProgress = (username) => {
   const raw = localStorage.getItem(storageKey(username));
