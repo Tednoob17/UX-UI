@@ -1,0 +1,157 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Tracks | UX-UI Intranet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="bg"></div>
+    <main class="app">
+      <div class="dashboard-shell">
+        <aside class="app-sidebar-left">
+          <div class="marked-title">Menu</div>
+          <div class="projects-menu-list">
+            <a class="project-item sidebar-item" href="index.html">
+              <span class="icon-briefcase project-status-icon"></span>
+              My projects
+            </a>
+            <a class="project-item sidebar-item" href="progress.html">
+              <span class="icon-globe project-status-icon"></span>
+              Progress map
+            </a>
+            <a class="project-item sidebar-item" href="project-list.html">
+              <span class="icon-list-1 project-status-icon"></span>
+              Project list
+            </a>
+            <a class="project-item sidebar-item" href="tracks.html">
+              <span class="icon-list-1 project-status-icon"></span>
+              Available tracks
+            </a>
+          </div>
+          <div class="marked-title">Quick links</div>
+          <div class="projects-menu-list">
+            <a class="project-item sidebar-item" href="project.html?project=project-1-get-a-room-ux">
+              <span class="icon-box-2 project-status-icon"></span>
+              Start project 1 (UX)
+            </a>
+            <a class="project-item sidebar-item" href="project.html?project=project-1-get-a-room-ui">
+              <span class="icon-box-2 project-status-icon"></span>
+              Start project 1 (UI)
+            </a>
+          </div>
+        </aside>
+
+        <section class="dashboard-main">
+          <header class="dashboard-topbar">
+            <div class="topbar-search">
+              <span class="icon-search"></span>
+              <input type="search" placeholder="Search tracks" />
+            </div>
+            <div class="topbar-actions">
+              <a class="ghost-link" href="index.html">Back to dashboard</a>
+              <a class="ghost-link" href="project-list.html">Quest list</a>
+            </div>
+          </header>
+
+          <section class="progress-hero">
+            <div>
+              <p class="kicker">Tracks</p>
+              <h1>Choose your learning track</h1>
+              <p class="subtitle">
+                Follow a focused path for UX or UI and unlock project briefs as
+                you go.
+              </p>
+            </div>
+          </section>
+
+          <section class="track-grid">
+            <article class="track-card">
+              <div class="track-header">
+                <h3>UX track</h3>
+                <span class="track-pill">Research</span>
+              </div>
+              <p>
+                Build discovery skills, interview technique, and research
+                synthesis. Move from problem framing to validated insights.
+              </p>
+              <ul>
+                <li>7 quests</li>
+                <li>3 capstone projects</li>
+                <li>Ideal for research-led designers</li>
+              </ul>
+              <div class="track-actions">
+                <a class="ghost-link" href="project.html?project=ux-quest-1-athele-keep-hydrated">
+                  Start Quest 1
+                </a>
+                <a class="ghost-link" href="progress.html">View map</a>
+              </div>
+            </article>
+
+            <article class="track-card">
+              <div class="track-header">
+                <h3>UI track</h3>
+                <span class="track-pill">Design systems</span>
+              </div>
+              <p>
+                Grow visual craft, component thinking, and interaction detail.
+                Build interfaces with rhythm, clarity, and accessibility.
+              </p>
+              <ul>
+                <li>5 quests</li>
+                <li>3 capstone projects</li>
+                <li>Ideal for interface-focused designers</li>
+              </ul>
+              <div class="track-actions">
+                <a class="ghost-link" href="project.html?project=ui-quest-1-colors-and-moodboard">
+                  Start Quest 1
+                </a>
+                <a class="ghost-link" href="progress.html">View map</a>
+              </div>
+            </article>
+
+            <article class="track-card">
+              <div class="track-header">
+                <h3>Fusion path</h3>
+                <span class="track-pill">Balanced</span>
+              </div>
+              <p>
+                Alternate UX and UI quests each week and finish every project
+                with a full-stack design mindset.
+              </p>
+              <ul>
+                <li>12 quests</li>
+                <li>4 capstone projects</li>
+                <li>Ideal for product designers</li>
+              </ul>
+              <div class="track-actions">
+                <a class="ghost-link" href="project-list.html">Pick a quest</a>
+                <a class="ghost-link" href="progress.html">View map</a>
+              </div>
+            </article>
+          </section>
+
+          <section class="level-up-card">
+            <div>
+              <h3>Ready to level up?</h3>
+              <p class="hint">
+                Complete your current quest checklist, then log your wins.
+              </p>
+            </div>
+            <div class="level-up-actions">
+              <a class="ghost-link" href="index.html">Open dashboard</a>
+              <a class="ghost-link" href="project-list.html">Open quests</a>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+  </body>
+</html>
