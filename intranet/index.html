@@ -63,10 +63,46 @@
           <div class="progress-meta" id="progress-meta">0% complete</div>
         </div>
 
+        <div class="stats-grid">
+          <div class="stat-card">
+            <p class="stat-label">Tasks done</p>
+            <p class="stat-value" id="stat-done">0</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Remaining</p>
+            <p class="stat-value" id="stat-remaining">0</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Projects completed</p>
+            <p class="stat-value" id="stat-projects">0</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Streak</p>
+            <p class="stat-value" id="stat-streak">0 days</p>
+          </div>
+          <div class="stat-card">
+            <p class="stat-label">Time logged</p>
+            <p class="stat-value" id="stat-time">0h</p>
+          </div>
+        </div>
+
+        <div class="section-progress" id="section-progress"></div>
+
+        <div class="panel">
+          <h3>Figma analyzer</h3>
+          <p class="hint">
+            Upload a .fig export for quick consistency checks (colors, fonts,
+            sizes).
+          </p>
+          <input type="file" id="figma-file" accept=".fig" />
+          <div id="figma-result" class="analysis"></div>
+        </div>
+
         <div id="task-list" class="task-list"></div>
       </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

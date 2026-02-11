@@ -26,141 +26,133 @@ This roadmap organizes the entire UX-UI curriculum into a clear, repeatable path
 
 ## Full quest order
 
-## Quest list (no links)
+## Quest links (all exercises)
 
 ### UX Quest 1 - Athele, keep hydrated
 
-- User interviews
-- Analytics
-- Personas
-- User journey
-- Problem statement
-- Ideation
-- Prototyping
+- [User interviews](subjects/ux/athele-keep-hydrated/user-interviews/README.md)
+- [Analytics](subjects/ux/athele-keep-hydrated/analytics/README.md)
+- [Personas](subjects/ux/athele-keep-hydrated/personas/README.md)
+- [User journey](subjects/ux/athele-keep-hydrated/user-journey/README.md)
+- [Problem statement](subjects/ux/athele-keep-hydrated/problem-statement/README.md)
+- [Ideation](subjects/ux/athele-keep-hydrated/ideation/README.md)
+- [Prototyping](subjects/ux/athele-keep-hydrated/prototyping/README.md)
 
 ### UX Quest 2 - Going on holidays with friends
 
-- Interview guide
-- Run interviews
-- Affinity diagram
-- Problem statement
-- Ideation
-- User flow
-- Prototyping
+- [Interview guide](subjects/ux/going-on-holidays-with-friends/interview-guide/README.md)
+- [Run interviews](subjects/ux/going-on-holidays-with-friends/run-interviews/README.md)
+- [Affinity diagram](subjects/ux/going-on-holidays-with-friends/affinity-diagram/README.md)
+- [Problem statement](subjects/ux/going-on-holidays-with-friends/problem-statement/README.md)
+- [Ideation](subjects/ux/going-on-holidays-with-friends/ideation/README.md)
+- [User flow](subjects/ux/going-on-holidays-with-friends/user-flow/README.md)
+- [Prototyping](subjects/ux/going-on-holidays-with-friends/prototyping/README.md)
 
 ### UX Quest 3 - Let's fight harassment
 
-- Competitive analysis
-- Surveys
-- Broadcast strategy
-- Interviews
-- Personas
-- User journey
-- Problem statement
+- [Competitive analysis](subjects/ux/lets-fight-harassment/competitive-analyss/README.md)
+- [Surveys](subjects/ux/lets-fight-harassment/surveys/README.md)
+- [Broadcast strategy](subjects/ux/lets-fight-harassment/broadcast-stategy/README.md)
+- [Interviews](subjects/ux/lets-fight-harassment/interviews/README.md)
+- [Personas](subjects/ux/lets-fight-harassment/personas/README.md)
+- [User journey](subjects/ux/lets-fight-harassment/user-journey/README.md)
+- [Problem statement](subjects/ux/lets-fight-harassment/problem-statement/README.md)
 
 ### UX Quest 4 - The Olympics
 
-- Ideation A
-- Ideation B
-- Ideation C
-- User flow
-- Prototyping
-- Animation
-- Test
+- [Ideation A](subjects/ux/the-olympics/ideation-a/README.md)
+- [Ideation B](subjects/ux/the-olympics/ideation-b/README.md)
+- [Ideation C](subjects/ux/the-olympics/ideation-c/README.md)
+- [User flow](subjects/ux/the-olympics/user-flow/README.md)
+- [Prototyping](subjects/ux/the-olympics/prototyping/README.md)
+- [Animation](subjects/ux/the-olympics/animation/README.md)
+- [Test](subjects/ux/the-olympics/test/README.md)
 
 ### UX Quest 5 - Music on
 
-- Heuristics
-- Site map
-- JTBD
-- Card sorting
-- Wireframes
-- Test protocol
-- Run 5 tests
+- [Heuristics](subjects/ux/music-on/heuristics/README.md)
+- [Site map](subjects/ux/music-on/site-map/README.md)
+- [JTBD](subjects/ux/music-on/jtbd/README.md)
+- [Card sorting](subjects/ux/music-on/card-sorting/README.md)
+- [Wireframes](subjects/ux/music-on/wireframes/README.md)
+- [Test protocol](subjects/ux/music-on/test-protocol/README.md)
+- [Run 5 tests](subjects/ux/music-on/run-5-tests/README.md)
 
 ### UX Quest 6 - Sunday night movie
 
-- User flow
-- Wireframes
-- Wireframes animation
-- Test feature 1
-- Test feature 2
-- Test feature 3
-- Iteration
+- [User flow](subjects/ux/sunday-night-movie/user-flow/README.md)
+- [Wireframes](subjects/ux/sunday-night-movie/wireframes/README.md)
+- [Wireframes animation](subjects/ux/sunday-night-movie/wireframes-animation/README.md)
+- [Test feature 1](subjects/ux/sunday-night-movie/test-feature-1/README.md)
+- [Test feature 2](subjects/ux/sunday-night-movie/test-feature-2/README.md)
+- [Test feature 3](subjects/ux/sunday-night-movie/test-feature-3/README.md)
+- [Iteration](subjects/ux/sunday-night-movie/iteration/README.md)
 
 ### UX Quest 7 - Seamstress
 
-- UX strategy
-- Empathy
-- Define
-- Problem statement
-- Ideation
-- Prototype
-- Test
+- [UX strategy](subjects/ux/seamstress/ux-strategy/README.md)
+- [Empathy](subjects/ux/seamstress/empathy/README.md)
+- [Define](subjects/ux/seamstress/define/README.md)
+- [Problem statement](subjects/ux/seamstress/problem-statement/README.md)
+- [Ideation](subjects/ux/seamstress/ideation/README.md)
+- [Prototype](subjects/ux/seamstress/prototype/README.md)
+- [Test](subjects/ux/seamstress/test/README.md)
 
 ### UI Quest 1 - Colors and moodboard
 
-- Find the colors
-- Color codes
-- Color combinations
-- Moodboard
-- Typography
-- Typography moodboard
-- UI challenge timer
-- UI challenge watches
-- UI challenge flight
-- UI challenge spotify
-- UI challenge bitcoin dashboard
+- [Find the colors](subjects/ui/colors-and-moodboard/find-the-colors/README.md)
+- [Color codes](subjects/ui/colors-and-moodboard/color-codes/README.md)
+- [Color combinations](subjects/ui/colors-and-moodboard/color-combinations/README.md)
+- [Moodboard](subjects/ui/colors-and-moodboard/moodboard/README.md)
+- [Typography](subjects/ui/colors-and-moodboard/typography/README.md)
+- [Typography moodboard](subjects/ui/colors-and-moodboard/typography-moodboard/README.md)
+- [UI challenge timer](subjects/ui/colors-and-moodboard/ui-challenge-timer/README.md)
+- [UI challenge watches](subjects/ui/colors-and-moodboard/ui-challenge-watches/README.md)
+- [UI challenge flight](subjects/ui/colors-and-moodboard/ui-challenge-flight/README.md)
+- [UI challenge spotify](subjects/ui/colors-and-moodboard/ui-challenge-spotify/README.md)
+- [UI challenge bitcoin dashboard](subjects/ui/colors-and-moodboard/ui-challenge-bitcoin-dashboard/README.md)
 
 ### UI Quest 2 - Atomic design
 
-- Browsing
-- Material design
-- Design system library
-- Library for climbing addicts
-- Library for a dating app
+- [Browsing](subjects/ui/atomic-design/browsing/README.md)
+- [Material design](subjects/ui/atomic-design/material-design/README.md)
+- [Design system library](subjects/ui/atomic-design/design-system-library/README.md)
+- [Library for climbing addicts](subjects/ui/atomic-design/library-for-climbing-addicts/README.md)
+- [Library for a dating app](subjects/ui/atomic-design/library-for-a-dating-app/README.md)
 
 ### UI Quest 3 - Rules
 
-- Grids
-- Multi state
-- Accessibility (website)
-- Accessibility (app)
-- Breadcrumbs
-- Toggle buttons
-- Radio buttons
-- Calendars
-- Time pickers
-- Micro interactions
-- Consistency
+- [Grids](subjects/ui/rules/grids/README.md)
+- [Multi state](subjects/ui/rules/multi-state/README.md)
+- [Accessibility (website)](subjects/ui/rules/accessbility-website/README.md)
+- [Accessibility (app)](subjects/ui/rules/accessbility-app/README.md)
+- [Breadcrumbs](subjects/ui/rules/breadcrumbs/README.md)
+- [Toggle buttons](subjects/ui/rules/toggle-buttons/README.md)
+- [Radio buttons](subjects/ui/rules/radio-buttons/README.md)
+- [Calendars](subjects/ui/rules/calendars/README.md)
+- [Time pickers](subjects/ui/rules/time-pickers/README.md)
+- [Micro interactions](subjects/ui/rules/micro-interactions/README.md)
+- [Consistency](subjects/ui/rules/consistency/README.md)
 
 ### UI Quest 4 - Building an interface
 
-- Styleguide
-- Design system library
-- Design screens
-- Animation
-- Desirability testing
+- [Styleguide](subjects/ui/building-an-interface/styleguide/README.md)
+- [Design system library](subjects/ui/building-an-interface/design-system-library/README.md)
+- [Design screens](subjects/ui/building-an-interface/design-screens/README.md)
+- [Animation](subjects/ui/building-an-interface/animation/README.md)
+- [Desirability testing](subjects/ui/building-an-interface/desirability-testing/README.md)
 
 ### UI Quest 5 - Heuristics
 
-- Audit
-- Recommendations
+- [Audit](subjects/ui/heuristics/audit/README.md)
+- [Recommendations](subjects/ui/heuristics/recommendations/README.md)
 
 ### Projects (after UX + UI)
 
-- Project 1: Get a room
-  - UX part
-  - UI part
-- Project 2: Let's do some sports
-  - UX part
-  - UI part
-- Project 3: Let's fair trade
-  - UX part
-  - UI part
-- Project 4: A table
-  - UX part
-  - UI part
+- Project 1 - Get a room: [UX part](subjects/project-get-a-room/ux/README.md) | [UI part](subjects/project-get-a-room/ui/README.md)
+- Project 2 - Let's do some sports: [UX part](subjects/project-lets-do-some-sports/ux/README.md) | [UI part](subjects/project-lets-do-some-sports/ui/README.md)
+- Project 3 - Let's fair trade: [UX part](subjects/project-lets-fair-trade/ux/README.md) | [UI part](subjects/project-lets-fair-trade/ui/README.md)
+- Project 4 - A table: [UX part](subjects/project-a-table/ux/README.md) | [UI part](subjects/project-a-table/ui/README.md)
 
 ### UX Quests
 

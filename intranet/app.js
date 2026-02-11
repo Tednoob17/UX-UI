@@ -10,6 +10,14 @@ const progressMeta = document.getElementById("progress-meta");
 const resetBtn = document.getElementById("reset-btn");
 const logoutBtn = document.getElementById("logout-btn");
 const exportBtn = document.getElementById("export-btn");
+const statDone = document.getElementById("stat-done");
+const statRemaining = document.getElementById("stat-remaining");
+const statProjects = document.getElementById("stat-projects");
+const statStreak = document.getElementById("stat-streak");
+const statTime = document.getElementById("stat-time");
+const sectionProgress = document.getElementById("section-progress");
+const figmaFileInput = document.getElementById("figma-file");
+const figmaResult = document.getElementById("figma-result");
 
 const tasks = [
   {
@@ -535,7 +543,7 @@ const tasks = [
 ];
 
 let currentUser = null;
-let progress = { completed: {} };
+let progress = { completed: {}, activityDates: [], timeBySection: {} };
 
 const storageKey = (username) => `uxui-progress-${username}`;
 
@@ -549,12 +557,18 @@ const clearCurrentUser = () => {
 
 const loadProgress = (username) => {
   const raw = localStorage.getItem(storageKey(username));
-  if (!raw) return { completed: {} };
+  if (!raw) return { completed: {}, activityDates: [], timeBySection: {} };
   try {
     const parsed = JSON.parse(raw);
-    return parsed && parsed.completed ? parsed : { completed: {} };
+    return parsed && parsed.completed
+      ? {
+          completed: parsed.completed,
+          activityDates: parsed.activityDates || [],
+          timeBySection: parsed.timeBySection || {},
+        }
+      : { completed: {}, activityDates: [], timeBySection: {} };
   } catch {
-    return { completed: {} };
+    return { completed: {}, activityDates: [], timeBySection: {} };
   }
 };
 
@@ -574,6 +588,143 @@ const updateProgressUI = () => {
   const percent = total === 0 ? 0 : Math.round((done / total) * 100);
   progressBar.style.width = `${percent}%`;
   progressMeta.textContent = `${percent}% complete (${done}/${total})`;
+};
+
+const formatMinutes = (minutes) => {
+  if (!minutes) return "0h";
+  const hrs = Math.floor(minutes / 60);
+  const mins = minutes % 60;
+  if (hrs && mins) return `${hrs}h ${mins}m`;
+  if (hrs) return `${hrs}h`;
+  return `${mins}m`;
+};
+
+const recordActivity = () => {
+  const today = new Date();
+  const key = today.toISOString().slice(0, 10);
+  if (!progress.activityDates.includes(key)) {
+    progress.activityDates.push(key);
+  }
+};
+
+const computeStreaks = () => {
+  const dates = Array.from(new Set(progress.activityDates)).sort();
+  if (!dates.length) return { current: 0, best: 0 };
+
+  const dateSet = new Set(dates);
+  const today = new Date();
+  let current = 0;
+  for (let i = 0; i < 3650; i += 1) {
+    const day = new Date(today);
+    day.setDate(today.getDate() - i);
+    const key = day.toISOString().slice(0, 10);
+    if (!dateSet.has(key)) break;
+    current += 1;
+  }
+
+  let best = 0;
+  let run = 0;
+  let lastDate = null;
+  dates.forEach((dateStr) => {
+    const date = new Date(`${dateStr}T00:00:00`);
+    if (!lastDate) {
+      run = 1;
+    } else {
+      const diff = (date - lastDate) / (1000 * 60 * 60 * 24);
+      run = diff === 1 ? run + 1 : 1;
+    }
+    if (run > best) best = run;
+    lastDate = date;
+  });
+
+  return { current, best };
+};
+
+const computeProjectCompletion = () => {
+  const pairs = [
+    ["proj1-ux", "proj1-ui"],
+    ["proj2-ux", "proj2-ui"],
+    ["proj3-ux", "proj3-ui"],
+    ["proj4-ux", "proj4-ui"],
+  ];
+  return pairs.filter(
+    ([uxId, uiId]) => progress.completed[uxId] && progress.completed[uiId]
+  ).length;
+};
+
+const updateStatsUI = () => {
+  const { total, done } = computeTotals();
+  const remaining = total - done;
+  const { current, best } = computeStreaks();
+  const projectCount = computeProjectCompletion();
+  const totalMinutes = Object.values(progress.timeBySection || {}).reduce(
+    (sum, value) => sum + value,
+    0
+  );
+
+  statDone.textContent = done.toString();
+  statRemaining.textContent = remaining.toString();
+  statProjects.textContent = `${projectCount}/4`;
+  statStreak.textContent = `${current} days (best ${best})`;
+  statTime.textContent = formatMinutes(totalMinutes);
+};
+
+const addTime = (sectionName, minutes) => {
+  if (!progress.timeBySection) progress.timeBySection = {};
+  const current = progress.timeBySection[sectionName] || 0;
+  progress.timeBySection[sectionName] = current + minutes;
+  recordActivity();
+  saveProgress();
+  renderSectionProgress();
+  updateStatsUI();
+};
+
+const renderSectionProgress = () => {
+  sectionProgress.innerHTML = "";
+  tasks.forEach((section) => {
+    const total = section.items.length;
+    const done = section.items.filter((item) => progress.completed[item.id])
+      .length;
+    const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+    const timeSpent = formatMinutes(
+      progress.timeBySection[section.section] || 0
+    );
+
+    const row = document.createElement("div");
+    row.className = "section-row";
+
+    const title = document.createElement("p");
+    title.className = "section-title";
+    title.textContent = section.section;
+
+    const meta = document.createElement("p");
+    meta.className = "section-meta";
+    meta.textContent = `${done}/${total} done · ${timeSpent} logged`;
+
+    const bar = document.createElement("div");
+    bar.className = "section-bar";
+    const barFill = document.createElement("div");
+    barFill.className = "section-bar-fill";
+    barFill.style.width = `${percent}%`;
+    bar.appendChild(barFill);
+
+    const actions = document.createElement("div");
+    actions.className = "time-actions";
+    [15, 30, 60].forEach((minutes) => {
+      const btn = document.createElement("button");
+      btn.type = "button";
+      btn.className = "ghost";
+      btn.textContent = `+${minutes}m`;
+      btn.addEventListener("click", () => addTime(section.section, minutes));
+      actions.appendChild(btn);
+    });
+
+    row.appendChild(title);
+    row.appendChild(meta);
+    row.appendChild(bar);
+    row.appendChild(actions);
+    sectionProgress.appendChild(row);
+  });
 };
 
 const renderTasks = () => {
@@ -598,8 +749,13 @@ const renderTasks = () => {
       checkbox.checked = Boolean(progress.completed[item.id]);
       checkbox.addEventListener("change", () => {
         progress.completed[item.id] = checkbox.checked;
+        if (checkbox.checked) {
+          recordActivity();
+        }
         saveProgress();
         updateProgressUI();
+        updateStatsUI();
+        renderSectionProgress();
       });
 
       const label = document.createElement("span");
@@ -610,10 +766,10 @@ const renderTasks = () => {
 
       const link = document.createElement("a");
       link.className = "task-link";
-      link.href = item.link;
+      link.href = `preview.html?file=${encodeURIComponent(item.link)}`;
       link.target = "_blank";
       link.rel = "noopener";
-      link.textContent = "Open";
+      link.textContent = "Preview";
 
       row.appendChild(left);
       row.appendChild(link);
@@ -631,6 +787,8 @@ const showDashboard = () => {
   progress = loadProgress(currentUser.username);
   renderTasks();
   updateProgressUI();
+  updateStatsUI();
+  renderSectionProgress();
 };
 
 const showLogin = () => {
@@ -681,10 +839,12 @@ resetBtn.addEventListener("click", () => {
   if (!currentUser) return;
   const confirmed = window.confirm("Reset all progress for this user?");
   if (!confirmed) return;
-  progress = { completed: {} };
+  progress = { completed: {}, activityDates: [], timeBySection: {} };
   saveProgress();
   renderTasks();
   updateProgressUI();
+  updateStatsUI();
+  renderSectionProgress();
 });
 
 exportBtn.addEventListener("click", () => {
@@ -704,6 +864,94 @@ exportBtn.addEventListener("click", () => {
   link.click();
   URL.revokeObjectURL(url);
 });
+
+const analyzeFigmaFile = async (file) => {
+  if (!figmaResult) return;
+  figmaResult.textContent = "Analyzing file...";
+  try {
+    const zip = await JSZip.loadAsync(file);
+    const documentFile =
+      zip.file("document.json") || zip.file(/document\.json$/i)[0];
+    if (!documentFile) {
+      figmaResult.textContent = "No document.json found in this .fig file.";
+      return;
+    }
+    const docText = await documentFile.async("text");
+    const data = JSON.parse(docText);
+    const colors = new Set();
+    const fonts = new Set();
+    const fontSizes = new Set();
+
+    const toHex = (color) => {
+      if (!color) return null;
+      const r = Math.round((color.r || 0) * 255);
+      const g = Math.round((color.g || 0) * 255);
+      const b = Math.round((color.b || 0) * 255);
+      return `#${[r, g, b]
+        .map((value) => value.toString(16).padStart(2, "0"))
+        .join("")}`;
+    };
+
+    const walk = (node) => {
+      if (!node) return;
+      if (node.fills && Array.isArray(node.fills)) {
+        node.fills.forEach((fill) => {
+          if (fill.type === "SOLID") {
+            const hex = toHex(fill.color);
+            if (hex) colors.add(hex.toUpperCase());
+          }
+        });
+      }
+      if (node.type === "TEXT" && node.style) {
+        if (node.style.fontFamily) fonts.add(node.style.fontFamily);
+        if (node.style.fontSize) fontSizes.add(node.style.fontSize);
+      }
+      if (node.children && Array.isArray(node.children)) {
+        node.children.forEach(walk);
+      }
+    };
+
+    walk(data.document);
+
+    let score = 100;
+    const colorCount = colors.size;
+    const fontCount = fonts.size;
+    const sizeCount = fontSizes.size;
+    if (colorCount > 8) score -= (colorCount - 8) * 2;
+    if (fontCount > 3) score -= (fontCount - 3) * 5;
+    if (sizeCount > 10) score -= (sizeCount - 10) * 1;
+    score = Math.max(0, Math.min(100, score));
+
+    const warnings = [];
+    if (colorCount > 8) {
+      warnings.push("High color variety (8+). Consider a tighter palette.");
+    }
+    if (fontCount > 3) {
+      warnings.push("Too many font families. Consider limiting to 2-3.");
+    }
+    if (sizeCount > 10) {
+      warnings.push("Many font sizes detected. Consider a type scale.");
+    }
+
+    figmaResult.innerHTML = `
+      <strong>Heuristic score:</strong> ${score}/100<br />
+      <strong>Colors:</strong> ${colorCount} | <strong>Fonts:</strong> ${fontCount} |
+      <strong>Font sizes:</strong> ${sizeCount}<br />
+      ${warnings.length ? `<strong>Notes:</strong><br />- ${warnings.join("<br />- ")}` : "Looks consistent based on these checks."}
+      <br /><em>This is a quick consistency check, not a final quality grade.</em>
+    `;
+  } catch (error) {
+    figmaResult.textContent = `Unable to analyze file: ${error.message}`;
+  }
+};
+
+if (figmaFileInput) {
+  figmaFileInput.addEventListener("change", (event) => {
+    const file = event.target.files[0];
+    if (!file) return;
+    analyzeFigmaFile(file);
+  });
+}
 
 const autoLogin = async () => {
   const savedUser = localStorage.getItem("uxui-user");
