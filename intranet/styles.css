@@ -126,6 +126,18 @@ button.ghost {
   margin: 0;
 }
 
+.note {
+  margin: 8px 0 0;
+  font-size: 13px;
+  color: var(--muted);
+}
+
+.divider {
+  height: 1px;
+  background: var(--border);
+  margin: 18px 0;
+}
+
 .dash-header {
   display: flex;
   align-items: flex-start;

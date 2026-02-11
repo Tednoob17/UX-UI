@@ -4,6 +4,8 @@
 
 This repository contains all the necessary files for the `UX-UI` subject of the [01 Edu System](https://github.com/01-edu) curriculum.
 
+This UI/UX Pool is inspired by the Epitech, 42, and Holberton pools and was created at Zone01 campus.
+
 ## Run the intranet locally
 
 The progress tracker lives in `intranet/`.
@@ -12,8 +14,8 @@ The progress tracker lives in `intranet/`.
 	- `python -m http.server 8000`
 2. Open `http://localhost:8000/intranet/index.html` in your browser.
 
-Default login is stored in `intranet/users.json`.
-Progress is saved in your browser via localStorage.
+Admin login is stored in `intranet/users.json`. Students should register in the intranet UI.
+Progress and student accounts are saved in your browser via localStorage.
 
 ## Deploy the intranet (Vercel option)
 
