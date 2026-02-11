@@ -19,6 +19,15 @@ const statTime = document.getElementById("stat-time");
 const sectionProgress = document.getElementById("section-progress");
 const figmaFileInput = document.getElementById("figma-file");
 const figmaResult = document.getElementById("figma-result");
+const projectBrowserGrid = document.getElementById("project-browser-grid");
+const profileAvatar = document.getElementById("profile-avatar");
+const profileCity = document.getElementById("profile-city");
+const profileStatus = document.getElementById("profile-status");
+const profileRole = document.getElementById("profile-role");
+const levelNumber = document.getElementById("level-number");
+const levelPercent = document.getElementById("level-percent");
+const calendarGrid = document.getElementById("calendar-grid");
+const calendarMonth = document.getElementById("calendar-month");
 
 const tasks = [
   {
@@ -549,6 +558,9 @@ const adminUser = {
   username: "admin",
   password: "60d8d9e58413edd583caaf8091d364d8425723bb0088f1385456110aa9600cc5",
   displayName: "Admin",
+  city: "Le Havre",
+  status: "Available",
+  role: "Cadet",
 };
 
 const localUsersKey = "uxui-local-users";
@@ -602,6 +614,180 @@ const saveProgress = () => {
   localStorage.setItem(storageKey(currentUser.username), JSON.stringify(progress));
 };
 
+const buildProjectId = (value) =>
+  value
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/(^-|-$)/g, "");
+
+const renderProjectBrowser = () => {
+  if (!projectBrowserGrid) return;
+  projectBrowserGrid.innerHTML = "";
+
+  const uxSections = tasks.filter((section) =>
+    section.section.startsWith("UX Quest")
+  );
+  const uiSections = tasks.filter((section) =>
+    section.section.startsWith("UI Quest")
+  );
+  const projectSection = tasks.find((section) => section.section === "Projects");
+
+  const groups = [
+    { title: "UX quests", sections: uxSections, type: "quest" },
+    { title: "UI quests", sections: uiSections, type: "quest" },
+  ];
+
+  if (projectSection) {
+    groups.push({ title: "Projects", sections: projectSection.items, type: "project" });
+  }
+
+  groups.forEach((group) => {
+    const column = document.createElement("div");
+    column.className = "project-column";
+
+    const heading = document.createElement("h4");
+    heading.textContent = group.title;
+    column.appendChild(heading);
+
+    group.sections.forEach((entry) => {
+      const label = group.type === "quest" ? entry.section : entry.label;
+      const count = group.type === "quest" ? `${entry.items.length} steps` : "Capstone";
+      const id = buildProjectId(label);
+
+      const card = document.createElement("div");
+      card.className = "quest-card";
+
+      const link = document.createElement("a");
+      link.href = `project.html?project=${encodeURIComponent(id)}`;
+      link.textContent = label;
+
+      const meta = document.createElement("span");
+      meta.className = "quest-meta";
+      meta.textContent = count;
+
+      card.appendChild(link);
+      card.appendChild(meta);
+      column.appendChild(card);
+    });
+
+    projectBrowserGrid.appendChild(column);
+  });
+};
+
+const getInitials = (name) => {
+  if (!name) return "UX";
+  const parts = name.trim().split(/\s+/).slice(0, 2);
+  return parts.map((part) => part[0].toUpperCase()).join("");
+};
+
+const updateProfileUI = () => {
+  if (!currentUser) return;
+  if (profileAvatar) {
+    profileAvatar.textContent = getInitials(currentUser.displayName);
+  }
+  if (profileCity) {
+    profileCity.textContent = currentUser.city || "Le Havre";
+  }
+  if (profileStatus) {
+    profileStatus.textContent = currentUser.status || "Available";
+  }
+  if (profileRole) {
+    profileRole.textContent = currentUser.role || "Cadet";
+  }
+};
+
+const buildLevelGroups = () => {
+  const levels = [];
+  tasks.forEach((section) => {
+    const match = section.section.match(/^(UX|UI) Quest (\d+)/);
+    if (!match) return;
+    const index = Number(match[2]) - 1;
+    if (!levels[index]) levels[index] = [];
+    levels[index].push(section);
+  });
+  return levels.filter(Boolean);
+};
+
+const computeLevelProgress = () => {
+  const levels = buildLevelGroups();
+  let currentLevel = 1;
+  let levelDone = 0;
+  let levelTotal = 0;
+  let levelPercentValue = 0;
+
+  levels.forEach((sections, index) => {
+    if (levelTotal && levelDone < levelTotal) return;
+    const total = sections.reduce((sum, section) => sum + section.items.length, 0);
+    const done = sections.reduce(
+      (sum, section) =>
+        sum + section.items.filter((item) => progress.completed[item.id]).length,
+      0
+    );
+    if (total === 0) return;
+    currentLevel = index + 1;
+    levelDone = done;
+    levelTotal = total;
+    levelPercentValue = total === 0 ? 0 : Math.round((done / total) * 100);
+  });
+
+  if (levelTotal === 0) {
+    return { level: 1, percent: 0, done: 0, total: 0 };
+  }
+
+  return {
+    level: currentLevel,
+    percent: levelPercentValue,
+    done: levelDone,
+    total: levelTotal,
+  };
+};
+
+const renderCalendar = () => {
+  if (!calendarGrid || !calendarMonth) return;
+  calendarGrid.innerHTML = "";
+
+  const today = new Date();
+  const year = today.getFullYear();
+  const month = today.getMonth();
+  calendarMonth.textContent = today.toLocaleString("en-US", {
+    month: "long",
+    year: "numeric",
+  });
+
+  const firstDay = new Date(year, month, 1);
+  const startIndex = (firstDay.getDay() + 6) % 7;
+  const daysInMonth = new Date(year, month + 1, 0).getDate();
+  const prevMonthDays = new Date(year, month, 0).getDate();
+
+  const totalCells = 42;
+  for (let i = 0; i < totalCells; i += 1) {
+    const cell = document.createElement("div");
+    cell.className = "calendar-day";
+    let dayNumber = 0;
+    let cellDate = null;
+
+    if (i < startIndex) {
+      dayNumber = prevMonthDays - startIndex + i + 1;
+      cell.classList.add("muted");
+      cellDate = new Date(year, month - 1, dayNumber);
+    } else if (i >= startIndex + daysInMonth) {
+      dayNumber = i - startIndex - daysInMonth + 1;
+      cell.classList.add("muted");
+      cellDate = new Date(year, month + 1, dayNumber);
+    } else {
+      dayNumber = i - startIndex + 1;
+      cellDate = new Date(year, month, dayNumber);
+    }
+
+    if (cellDate.toDateString() === today.toDateString()) {
+      cell.classList.add("today");
+    }
+
+    cell.textContent = dayNumber.toString();
+    calendarGrid.appendChild(cell);
+  }
+};
+
 const computeTotals = () => {
   const total = tasks.reduce((sum, section) => sum + section.items.length, 0);
   const done = Object.values(progress.completed).filter(Boolean).length;
@@ -609,10 +795,17 @@ const computeTotals = () => {
 };
 
 const updateProgressUI = () => {
-  const { total, done } = computeTotals();
-  const percent = total === 0 ? 0 : Math.round((done / total) * 100);
+  const levelProgress = computeLevelProgress();
+  const percent = levelProgress.percent;
   progressBar.style.width = `${percent}%`;
-  progressMeta.textContent = `${percent}% complete (${done}/${total})`;
+  progressMeta.textContent = `Level ${levelProgress.level} · ${percent}%`;
+
+  if (levelNumber) {
+    levelNumber.textContent = levelProgress.level.toString().padStart(2, "0");
+  }
+  if (levelPercent) {
+    levelPercent.textContent = `${percent}% of level`;
+  }
 };
 
 const formatMinutes = (minutes) => {
@@ -810,7 +1003,10 @@ const showDashboard = () => {
   dashboard.classList.remove("hidden");
   welcome.textContent = `Welcome, ${currentUser.displayName}`;
   progress = loadProgress(currentUser.username);
+  updateProfileUI();
   renderTasks();
+  renderProjectBrowser();
+  renderCalendar();
   updateProgressUI();
   updateStatsUI();
   renderSectionProgress();
@@ -836,14 +1032,21 @@ const authenticate = async (username, password) => {
   return null;
 };
 
-const registerUser = async (displayName, username, password) => {
+const registerUser = async (displayName, city, username, password) => {
   const localUsers = loadLocalUsers();
   const admin = await loadAdminUser();
   const taken = localUsers.some((user) => user.username === username);
   if (taken || (admin && admin.username === username)) {
     throw new Error("Username already exists.");
   }
-  const newUser = { username, password, displayName };
+  const newUser = {
+    username,
+    password,
+    displayName,
+    city,
+    status: "Available",
+    role: "Cadet",
+  };
   localUsers.push(newUser);
   saveLocalUsers(localUsers);
   return newUser;
@@ -878,6 +1081,7 @@ if (registerForm) {
     const displayName = document
       .getElementById("register-display")
       .value.trim();
+    const city = document.getElementById("register-city").value.trim();
     const username = document
       .getElementById("register-username")
       .value.trim();
@@ -885,13 +1089,13 @@ if (registerForm) {
       .getElementById("register-password")
       .value.trim();
 
-    if (!displayName || !username || !password) {
+    if (!displayName || !city || !username || !password) {
       registerError.textContent = "All fields are required.";
       return;
     }
 
     try {
-      const newUser = await registerUser(displayName, username, password);
+      const newUser = await registerUser(displayName, city, username, password);
       currentUser = newUser;
       saveCurrentUser(newUser.username);
       registerForm.reset();

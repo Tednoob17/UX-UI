@@ -1,0 +1,127 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Progress Map | UX-UI Intranet</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body class="progress-page">
+    <div class="bg"></div>
+    <main class="app">
+      <div class="dashboard-shell">
+        <aside class="app-sidebar-left">
+          <div class="marked-title">Menu</div>
+          <div class="projects-menu-list">
+            <a class="project-item sidebar-item" href="index.html">
+              <span class="icon-briefcase project-status-icon"></span>
+              My projects
+            </a>
+            <a class="project-item sidebar-item" href="progress.html">
+              <span class="icon-globe project-status-icon"></span>
+              Progress map
+            </a>
+            <a class="project-item sidebar-item" href="#">
+              <span class="icon-list-1 project-status-icon"></span>
+              Project list
+            </a>
+            <a class="project-item sidebar-item" href="#">
+              <span class="icon-list-1 project-status-icon"></span>
+              Available tracks
+            </a>
+          </div>
+          <div class="marked-title">Your projects</div>
+          <div class="projects-menu-list">
+            <a
+              class="project-item sidebar-item"
+              href="project.html?project=project-1-get-a-room-ux"
+            >
+              <span class="icon-box-2 project-status-icon"></span>
+              Get a room (UX)
+            </a>
+            <a
+              class="project-item sidebar-item"
+              href="project.html?project=project-1-get-a-room-ui"
+            >
+              <span class="icon-box-2 project-status-icon"></span>
+              Get a room (UI)
+            </a>
+          </div>
+        </aside>
+
+        <section class="dashboard-main">
+          <header class="dashboard-topbar">
+            <div class="topbar-search">
+              <span class="icon-search"></span>
+              <input type="search" placeholder="Search quests" />
+            </div>
+            <div class="topbar-actions">
+              <a class="btn ghost" href="index.html">Back to dashboard</a>
+            </div>
+          </header>
+
+          <section class="progress-hero">
+            <div>
+              <p class="kicker">Progress map</p>
+              <h1>Quest Galaxy</h1>
+              <p class="subtitle">
+                Track your UX and UI journey as a constellation of quests and
+                projects.
+              </p>
+            </div>
+            <div class="progress-legend">
+              <span class="legend-item complete">Complete</span>
+              <span class="legend-item active">In progress</span>
+              <span class="legend-item locked">Locked</span>
+            </div>
+          </section>
+
+          <section class="progress-map">
+            <div class="progress-canvas-wrap">
+              <canvas class="progress-canvas"></canvas>
+            </div>
+            <div class="progress-legend-panel">
+              <div class="legend-grid">
+                <div class="legend-entry">
+                  <span class="legend-dot" style="background-color: #8957e5"></span>
+                  <span>Core</span>
+                </div>
+                <div class="legend-entry">
+                  <span class="legend-dot" style="background-color: #f1863f"></span>
+                  <span>Projects</span>
+                </div>
+                <div class="legend-entry">
+                  <span class="legend-dot" style="background-color: #facc15"></span>
+                  <span>Resources</span>
+                </div>
+                <div class="legend-entry">
+                  <span class="legend-dot clip-path-triangle" style="background-color: #df4e4e"></span>
+                  <span>You</span>
+                </div>
+                <div class="legend-entry">
+                  <span class="legend-dot rounded-lg" style="background-color: #42c170"></span>
+                  <span>UX quests</span>
+                </div>
+                <div class="legend-entry">
+                  <span class="legend-dot clip-path-triangle" style="background-color: #7a7a7a"></span>
+                  <span>Reference docs</span>
+                </div>
+                <div class="legend-entry">
+                  <span class="legend-dot" style="background-color: #72bef4"></span>
+                  <span>UI quests</span>
+                </div>
+              </div>
+            </div>
+          </section>
+        </section>
+      </div>
+    </main>
+    <script src="progress.js"></script>
+  </body>
+</html>

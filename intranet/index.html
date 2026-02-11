@@ -62,6 +62,10 @@
               <input type="text" id="register-display" required />
             </label>
             <label>
+              City
+              <input type="text" id="register-city" required />
+            </label>
+            <label>
               Username
               <input type="text" id="register-username" required />
             </label>
@@ -75,83 +79,176 @@
         </section>
       </div>
 
-      <section class="card hidden" id="dashboard">
-        <div class="dash-header">
-          <div>
-            <h2 id="welcome">Welcome</h2>
-            <p class="hint">Progress is stored in your browser.</p>
-          </div>
-          <div class="actions">
-            <button id="export-btn" type="button">Export progress</button>
-            <button id="reset-btn" type="button" class="ghost">Reset</button>
-            <button id="logout-btn" type="button" class="ghost">Logout</button>
+      <section class="card hidden dashboard-card" id="dashboard">
+        <div class="dashboard-shell">
+          <aside class="app-sidebar-left">
+            <div class="marked-title">Menu</div>
+            <div class="projects-menu-list">
+              <a class="project-item sidebar-item" href="index.html">
+                <span class="icon-briefcase project-status-icon"></span>
+                My projects
+              </a>
+              <a class="project-item sidebar-item" href="progress.html">
+                <span class="icon-globe project-status-icon"></span>
+                Progress map
+              </a>
+              <a class="project-item sidebar-item" href="#">
+                <span class="icon-list-1 project-status-icon"></span>
+                Project list
+              </a>
+              <a class="project-item sidebar-item" href="#">
+                <span class="icon-list-1 project-status-icon"></span>
+                Available tracks
+              </a>
+            </div>
+            <div class="marked-title">Your projects</div>
+            <div class="projects-menu-list">
+              <a
+                class="project-item sidebar-item"
+                href="project.html?project=project-1-get-a-room-ux"
+              >
+                <span class="icon-box-2 project-status-icon"></span>
+                Get a room (UX)
+              </a>
+              <a
+                class="project-item sidebar-item"
+                href="project.html?project=project-1-get-a-room-ui"
+              >
+                <span class="icon-box-2 project-status-icon"></span>
+                Get a room (UI)
+              </a>
+            </div>
+          </aside>
+
+          <div class="dashboard-main">
+            <header class="dashboard-topbar">
+              <div class="topbar-search">
+                <span class="icon-search"></span>
+                <input type="search" placeholder="Search quests" />
+              </div>
+              <div class="topbar-actions">
+                <button id="export-btn" type="button">Export progress</button>
+                <button id="reset-btn" type="button" class="ghost">Reset</button>
+                <button id="logout-btn" type="button" class="ghost">Logout</button>
+              </div>
+            </header>
+
+            <section class="profile-hero">
+              <div class="profile-card">
+                <div class="profile-avatar" id="profile-avatar">NA</div>
+                <div>
+                  <h2 id="welcome">Welcome</h2>
+                  <p class="hint">UX-UI Pool · Progress saved locally.</p>
+                  <div class="profile-tags">
+                    <span id="profile-city">City</span>
+                    <span id="profile-status">Available</span>
+                    <span id="profile-role">Cadet</span>
+                  </div>
+                </div>
+              </div>
+              <div class="level-card">
+                <div class="level-meta">
+                  <h3>Level <span id="level-number">01</span></h3>
+                  <span class="level-sub" id="level-percent">0% of level</span>
+                </div>
+                <div class="progress">
+                  <div class="progress-bar" id="progress-bar"></div>
+                </div>
+                <div class="progress-meta" id="progress-meta">0% complete</div>
+              </div>
+            </section>
+
+            <div class="stats-grid">
+              <div class="stat-card">
+                <p class="stat-label">Tasks done</p>
+                <p class="stat-value" id="stat-done">0</p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-label">Remaining</p>
+                <p class="stat-value" id="stat-remaining">0</p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-label">Projects completed</p>
+                <p class="stat-value" id="stat-projects">0</p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-label">Streak</p>
+                <p class="stat-value" id="stat-streak">0 days</p>
+              </div>
+              <div class="stat-card">
+                <p class="stat-label">Time logged</p>
+                <p class="stat-value" id="stat-time">0h</p>
+              </div>
+            </div>
+
+            <section class="calendar-card">
+              <div class="calendar-header">
+                <h3>Calendar</h3>
+                <div class="calendar-meta" id="calendar-month"></div>
+              </div>
+              <div class="calendar-weekdays">
+                <span>Mon</span>
+                <span>Tue</span>
+                <span>Wed</span>
+                <span>Thu</span>
+                <span>Fri</span>
+                <span>Sat</span>
+                <span>Sun</span>
+              </div>
+              <div class="calendar-grid" id="calendar-grid"></div>
+            </section>
+
+            <section class="project-browser-card">
+              <div class="widget-header">
+                <h3>Projects</h3>
+                <button type="button" class="ghost">Quest list</button>
+              </div>
+              <div class="project-browser">
+                <p class="hint">
+                  Choose a UX or UI quest to open a dedicated project page.
+                </p>
+                <div class="project-browser-grid" id="project-browser-grid"></div>
+              </div>
+            </section>
+
+            <div class="section-progress" id="section-progress"></div>
+
+            <div class="panel">
+              <h3>Figma analyzer</h3>
+              <p class="hint">
+                Upload a .fig export for quick consistency checks (colors,
+                fonts, sizes).
+              </p>
+              <input type="file" id="figma-file" accept=".fig" />
+              <div id="figma-result" class="analysis"></div>
+            </div>
+
+            <div class="panel inspiration">
+              <div class="panel-header">
+                <h3>Daily growth</h3>
+                <span class="tag">Become big</span>
+              </div>
+              <p class="hint">
+                Read one quote and one idea a day. Save it in your head. Apply
+                it in your next deliverable.
+              </p>
+              <div class="quote">
+                <p class="quote-text">
+                  "Always base your decisions on the data, not on your biases."
+                </p>
+                <p class="quote-meta">UX program reminder</p>
+              </div>
+              <ul class="advice-list">
+                <li>Collect 3 references before you start a task.</li>
+                <li>Write 1 insight from every interview or test.</li>
+                <li>Make 1 small improvement each day, even 10 minutes.</li>
+                <li>Share progress weekly to get feedback and grow faster.</li>
+              </ul>
+            </div>
+
+            <div id="task-list" class="task-list"></div>
           </div>
         </div>
-
-        <div class="progress">
-          <div class="progress-bar" id="progress-bar"></div>
-          <div class="progress-meta" id="progress-meta">0% complete</div>
-        </div>
-
-        <div class="stats-grid">
-          <div class="stat-card">
-            <p class="stat-label">Tasks done</p>
-            <p class="stat-value" id="stat-done">0</p>
-          </div>
-          <div class="stat-card">
-            <p class="stat-label">Remaining</p>
-            <p class="stat-value" id="stat-remaining">0</p>
-          </div>
-          <div class="stat-card">
-            <p class="stat-label">Projects completed</p>
-            <p class="stat-value" id="stat-projects">0</p>
-          </div>
-          <div class="stat-card">
-            <p class="stat-label">Streak</p>
-            <p class="stat-value" id="stat-streak">0 days</p>
-          </div>
-          <div class="stat-card">
-            <p class="stat-label">Time logged</p>
-            <p class="stat-value" id="stat-time">0h</p>
-          </div>
-        </div>
-
-        <div class="section-progress" id="section-progress"></div>
-
-        <div class="panel">
-          <h3>Figma analyzer</h3>
-          <p class="hint">
-            Upload a .fig export for quick consistency checks (colors, fonts,
-            sizes).
-          </p>
-          <input type="file" id="figma-file" accept=".fig" />
-          <div id="figma-result" class="analysis"></div>
-        </div>
-
-        <div class="panel inspiration">
-          <div class="panel-header">
-            <h3>Daily growth</h3>
-            <span class="tag">Become big</span>
-          </div>
-          <p class="hint">
-            Read one quote and one idea a day. Save it in your head. Apply it in
-            your next deliverable.
-          </p>
-          <div class="quote">
-            <p class="quote-text">
-              “Always base your decisions on the data, not on your biases.”
-            </p>
-            <p class="quote-meta">UX program reminder</p>
-          </div>
-          <ul class="advice-list">
-            <li>Collect 3 references before you start a task.</li>
-            <li>Write 1 insight from every interview or test.</li>
-            <li>Make 1 small improvement each day, even 10 minutes.</li>
-            <li>Share progress weekly to get feedback and grow faster.</li>
-          </ul>
-        </div>
-
-        <div id="task-list" class="task-list"></div>
       </section>
     </main>
 
