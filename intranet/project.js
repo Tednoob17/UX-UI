@@ -214,6 +214,49 @@ const getInitials = (name) => {
   return parts.map((part) => part[0].toUpperCase()).join("");
 };
 
+const loadUserProgress = (username) => {
+  if (!username) {
+    return { completed: {}, activityDates: [], timeBySection: {} };
+  }
+  const raw = localStorage.getItem(`uxui-progress-${username}`);
+  if (!raw) return { completed: {}, activityDates: [], timeBySection: {} };
+  try {
+    const parsed = JSON.parse(raw);
+    return parsed && parsed.completed
+      ? {
+          completed: parsed.completed || {},
+          activityDates: parsed.activityDates || [],
+          timeBySection: parsed.timeBySection || {},
+        }
+      : { completed: {}, activityDates: [], timeBySection: {} };
+  } catch {
+    return { completed: {}, activityDates: [], timeBySection: {} };
+  }
+};
+
+const computeUserStats = (progress) => {
+  const completedCount = Object.values(progress.completed || {}).filter(Boolean)
+    .length;
+  const minutesLogged = Object.values(progress.timeBySection || {}).reduce(
+    (sum, value) => sum + value,
+    0
+  );
+  const activeDays = new Set(progress.activityDates || []).size;
+  const lastActive = (progress.activityDates || [])
+    .slice()
+    .sort()
+    .pop();
+  return { completedCount, minutesLogged, activeDays, lastActive };
+};
+
+const formatMinutes = (minutes) => {
+  if (!minutes) return "0h";
+  if (minutes < 60) return `${minutes}m`;
+  const hours = Math.floor(minutes / 60);
+  const remainder = minutes % 60;
+  return remainder ? `${hours}h ${remainder}m` : `${hours}h`;
+};
+
 const applyProjectData = (data) => {
   const merged = {
     ...defaultData,
@@ -254,6 +297,9 @@ const applyProjectData = (data) => {
   const userAvatar = document.getElementById("project-avatar");
   const userName = document.getElementById("project-user-name");
   const userMeta = document.getElementById("project-user-meta");
+  const sidebarNav = document.getElementById("project-sidebar-nav");
+  const alerts = document.getElementById("project-alerts");
+  const quickStats = document.getElementById("project-quick-stats");
 
   title.textContent = merged.title;
   track.textContent = `${merged.track} track`;
@@ -309,6 +355,87 @@ const applyProjectData = (data) => {
     userAvatar.textContent = getInitials(displayName);
     userName.textContent = displayName;
     userMeta.textContent = `${merged.track} track`;
+  }
+
+  if (sidebarNav) {
+    sidebarNav.innerHTML = "";
+    const navItems = [
+      { label: "Overview", href: "#project-overview" },
+      { label: "Skills", href: "#project-skills-card" },
+      ...(merged.resources.length
+        ? [{ label: "Resources", href: "#project-attachments" }]
+        : []),
+      { label: "Evaluation", href: "#project-evaluation-card" },
+    ];
+    navItems.forEach((item) => {
+      const link = document.createElement("a");
+      link.href = item.href;
+      link.textContent = item.label;
+      sidebarNav.appendChild(link);
+    });
+  }
+
+  if (alerts) {
+    alerts.innerHTML = "";
+    const progress = loadUserProgress(user?.username);
+    const stats = computeUserStats(progress);
+    const today = new Date();
+    const lastActive = stats.lastActive ? new Date(`${stats.lastActive}T00:00:00`) : null;
+    const daysSince = lastActive
+      ? Math.floor((today - lastActive) / (1000 * 60 * 60 * 24))
+      : null;
+
+    const primary = document.createElement("div");
+    primary.className = "alert-item";
+    const pill = document.createElement("span");
+    pill.className = "alert-pill";
+    pill.textContent = `${merged.status.label} alert`;
+    const primaryText = document.createElement("p");
+    if (stats.completedCount === 0) {
+      primaryText.textContent = `No tasks completed yet. Estimated time: ${merged.time}.`;
+    } else {
+      primaryText.textContent = `You have ${stats.completedCount} tasks done. Estimated time: ${merged.time}.`;
+    }
+    primary.appendChild(pill);
+    primary.appendChild(primaryText);
+
+    const secondary = document.createElement("div");
+    secondary.className = "alert-item muted";
+    const secondaryText = document.createElement("p");
+    if (daysSince !== null && daysSince >= 7) {
+      secondaryText.textContent = `No activity in ${daysSince} days. Log time to keep momentum.`;
+    } else if (merged.resources.length) {
+      secondaryText.textContent = `Resources ready. Start with ${merged.resources[0].label || "the first link"}.`;
+    } else {
+      secondaryText.textContent = "No resources attached yet. Check back after kickoff.";
+    }
+    secondary.appendChild(secondaryText);
+
+    alerts.appendChild(primary);
+    alerts.appendChild(secondary);
+  }
+
+  if (quickStats) {
+    const progress = loadUserProgress(user?.username);
+    const userStats = computeUserStats(progress);
+    const statRows = [
+      { label: "Tasks done", value: String(userStats.completedCount) },
+      { label: "Time logged", value: formatMinutes(userStats.minutesLogged) },
+      { label: "Active days", value: String(userStats.activeDays) },
+    ];
+    quickStats.innerHTML = "";
+    statRows.forEach((stat) => {
+      const row = document.createElement("div");
+      const label = document.createElement("span");
+      label.className = "stat-label";
+      label.textContent = stat.label;
+      const value = document.createElement("span");
+      value.className = "stat-value";
+      value.textContent = stat.value;
+      row.appendChild(label);
+      row.appendChild(value);
+      quickStats.appendChild(row);
+    });
   }
 };
 

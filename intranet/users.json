@@ -1,1 +1,10 @@
-[]
+[
+	{
+		"username": "student",
+		"password": "student123",
+		"displayName": "Student",
+		"city": "Le Havre",
+		"status": "Available",
+		"role": "Cadet"
+	}
+]

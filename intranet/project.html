@@ -86,7 +86,7 @@
           </div>
 
           <div class="project-grid">
-            <article class="project-card">
+            <article class="project-card" id="project-overview">
               <h2>Overview</h2>
               <div class="summary-grid">
                 <div class="summary-item">
@@ -117,7 +117,7 @@
               <p class="project-body" id="project-description"></p>
             </article>
 
-            <article class="project-card">
+            <article class="project-card" id="project-skills-card">
               <h2>Skills covered</h2>
               <div class="chip-grid" id="project-skills"></div>
               <h3>What to do before</h3>
@@ -130,7 +130,7 @@
               <div class="meta-note" id="project-attachments-note"></div>
             </article>
 
-            <article class="project-card">
+            <article class="project-card" id="project-evaluation-card">
               <h2>Evaluation</h2>
               <div class="timeline" id="project-evaluation">
                 <div class="timeline-step">
@@ -170,43 +170,17 @@
                 </p>
               </div>
             </div>
-            <nav class="sidebar-nav">
-              <a href="#">Units</a>
-              <a href="#">Marks</a>
-              <a href="#">My schedule</a>
-              <a href="#">Yearbook</a>
-              <a href="#">Internship</a>
-              <a href="#">Documents</a>
-            </nav>
+            <nav class="sidebar-nav" id="project-sidebar-nav"></nav>
           </div>
 
           <div class="sidebar-card">
             <h3>Alerts</h3>
-            <div class="alert-item">
-              <span class="alert-pill">Green alert</span>
-              <p>Keep your submissions steady this week.</p>
-            </div>
-            <div class="alert-item muted">
-              <p>Schedule your evaluation once the project is finished.</p>
-            </div>
+            <div id="project-alerts"></div>
           </div>
 
           <div class="sidebar-card">
             <h3>Quick stats</h3>
-            <div class="stats-stack">
-              <div>
-                <span class="stat-label">Attempts</span>
-                <span class="stat-value">0</span>
-              </div>
-              <div>
-                <span class="stat-label">Students active</span>
-                <span class="stat-value">0</span>
-              </div>
-              <div>
-                <span class="stat-label">Waiting eval</span>
-                <span class="stat-value">0</span>
-              </div>
-            </div>
+            <div class="stats-stack" id="project-quick-stats"></div>
           </div>
         </aside>
       </div>

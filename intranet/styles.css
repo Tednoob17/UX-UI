@@ -371,7 +371,7 @@ h1 {
   color: #e2e8f0;
   position: relative;
   overflow: hidden;
-  min-height: 520px;
+  min-height: 820px;
 }
 
 .progress-map::before {
@@ -387,7 +387,7 @@ h1 {
 
 .progress-canvas-wrap {
   position: relative;
-  min-height: 480px;
+  min-height: 760px;
   border-radius: 20px;
   border: 1px solid rgba(148, 163, 184, 0.2);
   overflow: hidden;
@@ -453,7 +453,11 @@ h1 {
   }
 
   .progress-map {
-    min-height: 420px;
+    min-height: 560px;
+  }
+
+  .progress-canvas-wrap {
+    min-height: 520px;
   }
 
   .legend-grid {
@@ -755,6 +759,8 @@ button.ghost {
   border: 1px solid var(--border);
   border-radius: 16px;
   padding: 16px;
+  background: var(--card);
+  box-shadow: var(--shadow);
 }
 
 .task-section h3 {
@@ -836,6 +842,8 @@ button.ghost {
   padding: 14px 16px;
   display: grid;
   gap: 12px;
+  background: var(--card);
+  box-shadow: var(--shadow);
 }
 
 .section-title {
