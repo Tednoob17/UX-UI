@@ -3,204 +3,278 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>UX-UI Progress Intranet</title>
+    <title>UX-UI | Intranet</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
       rel="stylesheet"
     />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
-    <div class="bg"></div>
-    <main class="app">
-      <header class="hero">
-        <p class="kicker">UX-UI Intranet</p>
-        <h1>Hero Progress Tracker</h1>
-        <p class="subtitle">
-          Log in to track your quest completion and keep momentum every day.
-        </p>
-      </header>
-
-      <div class="auth-grid" id="login-card">
-        <section class="card">
-          <h2>Login</h2>
-          <p class="note">
-            This UI/UX Pool is inspired by the Epitech, 42, and Holberton pools
-            and was created at Zone01 campus.
-          </p>
-          <form id="login-form">
-            <label>
-              Username
-              <input
-                type="text"
-                id="username"
-                autocomplete="username"
-                required
-              />
-            </label>
-            <label>
-              Password
-              <input
-                type="password"
-                id="password"
-                autocomplete="current-password"
-                required
-              />
-            </label>
-            <button type="submit">Sign in</button>
-            <p class="error" id="login-error" aria-live="polite"></p>
-          </form>
-        </section>
-
-        <section class="card">
-          <h2>Create an account</h2>
-          <form id="register-form">
-            <label>
-              Display name
-              <input type="text" id="register-display" required />
-            </label>
-            <label>
-              City
-              <input type="text" id="register-city" required />
-            </label>
-            <label>
-              Username
-              <input type="text" id="register-username" required />
-            </label>
-            <label>
-              Password
-              <input type="password" id="register-password" required />
-            </label>
-            <button type="submit">Register</button>
-            <p class="error" id="register-error" aria-live="polite"></p>
-          </form>
-        </section>
-      </div>
-
-      <section class="card hidden dashboard-card" id="dashboard">
-        <div class="dashboard-shell">
-          <aside class="app-sidebar-left">
-            <div class="marked-title">Menu</div>
-            <div class="projects-menu-list">
-              <a class="project-item sidebar-item" href="index.html">
-                <span class="icon-briefcase project-status-icon"></span>
-                My projects
-              </a>
-              <a class="project-item sidebar-item" href="progress.html">
-                <span class="icon-globe project-status-icon"></span>
-                Progress map
-              </a>
-              <a class="project-item sidebar-item" href="project-list.html">
-                <span class="icon-list-1 project-status-icon"></span>
-                Project list
-              </a>
-              <a class="project-item sidebar-item" href="tracks.html">
-                <span class="icon-list-1 project-status-icon"></span>
-                Available tracks
-              </a>
-            </div>
-            <div class="marked-title">Your projects</div>
-            <div class="projects-menu-list">
-              <a
-                class="project-item sidebar-item"
-                href="project.html?project=project-1-get-a-room-ux"
-              >
-                <span class="icon-box-2 project-status-icon"></span>
-                Get a room (UX)
-              </a>
-              <a
-                class="project-item sidebar-item"
-                href="project.html?project=project-1-get-a-room-ui"
-              >
-                <span class="icon-box-2 project-status-icon"></span>
-                Get a room (UI)
-              </a>
-            </div>
-          </aside>
-
-          <div class="dashboard-main">
-            <header class="dashboard-topbar">
-              <div class="topbar-search">
-                <span class="icon-search"></span>
-                <input type="search" placeholder="Search quests" />
-              </div>
-              <div class="topbar-actions">
-                <button id="export-btn" type="button">Export progress</button>
-                <button id="reset-btn" type="button" class="ghost">Reset</button>
-                <button id="logout-btn" type="button" class="ghost">Logout</button>
-              </div>
-            </header>
-
-            <section class="profile-hero">
-              <div class="profile-card">
-                <div class="profile-avatar" id="profile-avatar">NA</div>
-                <div>
-                  <h2 id="welcome">Welcome</h2>
-                  <p class="hint">UX-UI Pool · Progress saved locally.</p>
-                  <div class="profile-tags">
-                    <span id="profile-city">City</span>
-                    <span id="profile-status">Available</span>
-                    <span id="profile-role">Cadet</span>
-                  </div>
-                </div>
-              </div>
-              <div class="level-card">
-                <div class="level-meta">
-                  <h3>Level <span id="level-number">01</span></h3>
-                  <span class="level-sub" id="level-percent">0% of level</span>
-                </div>
-                <div class="progress">
-                  <div class="progress-bar" id="progress-bar"></div>
-                </div>
-                <div class="progress-meta" id="progress-meta">0% complete</div>
-              </div>
-            </section>
-
-            <div class="stats-grid">
-              <div class="stat-card">
-                <p class="stat-label">Tasks done</p>
-                <p class="stat-value" id="stat-done">0</p>
-              </div>
-              <div class="stat-card">
-                <p class="stat-label">Remaining</p>
-                <p class="stat-value" id="stat-remaining">0</p>
-              </div>
-              <div class="stat-card">
-                <p class="stat-label">Projects completed</p>
-                <p class="stat-value" id="stat-projects">0</p>
-              </div>
-              <div class="stat-card">
-                <p class="stat-label">Streak</p>
-                <p class="stat-value" id="stat-streak">0 days</p>
-              </div>
-              <div class="stat-card">
-                <p class="stat-label">Time logged</p>
-                <p class="stat-value" id="stat-time">0h</p>
-              </div>
-            </div>
-
-            <section class="calendar-card">
-              <div class="calendar-header">
-                <h3>Calendar</h3>
-                <div class="calendar-meta" id="calendar-month"></div>
-              </div>
-              <div class="calendar-weekdays">
-                <span>Mon</span>
-                <span>Tue</span>
-                <span>Wed</span>
-                <span>Thu</span>
-                <span>Fri</span>
-                <span>Sat</span>
-                <span>Sun</span>
-              </div>
-              <div class="calendar-grid" id="calendar-grid"></div>
-            </section>
+    <!-- ======== AUTH SCREEN ======== -->
+    <div class="auth-screen" id="auth-screen">
+      <div class="auth-bg"></div>
+      <main class="auth-container">
+        <header class="auth-header">
+          <div class="auth-logo">
+            <svg viewBox="0 0 137.6 96.6" fill="#00BABC" width="48" height="38">
+              <path d="M0 71.2h50.7v25.4h25.3V50.7H25.4L76 0H50.7L0 50.7z"/>
+              <path d="M86.9 25.4 112.2 0H86.9z"/>
+              <path d="m112.2 25.4-25.3 25.3v25.3h25.3V50.7l25.4-25.3V0h-25.4zM137.6 50.7 112.2 76h25.4z"/>
+            </svg>
           </div>
+          <h1>UX-UI Intranet</h1>
+          <p class="auth-subtitle">
+            Log in to track your quest completion and keep momentum every day.
+          </p>
+        </header>
+
+        <section class="intro-card" id="intro-card">
+          <h2>What is a Piscine?</h2>
+          <p>
+            A <strong>Piscine</strong> (French for "swimming pool") is an
+            intensive bootcamp format pioneered by schools like
+            <strong>42</strong>, <strong>Epitech</strong>, and
+            <strong>Holberton</strong>. For several weeks, participants are
+            immersed in hands-on projects, peer-learning, and self-paced
+            progression.
+          </p>
+          <p>
+            This UX-UI Pool follows the same philosophy: you learn by doing,
+            track your own progress, and level up through quests and projects.
+          </p>
+        </section>
+
+        <div class="auth-grid" id="login-card">
+          <section class="auth-card">
+            <h2>Login</h2>
+            <p class="note">
+              This UI/UX Pool is inspired by the Epitech, 42, and Holberton
+              pools and was created at Zone01 campus.
+            </p>
+            <form id="login-form">
+              <label>
+                Username
+                <input
+                  type="text"
+                  id="username"
+                  autocomplete="username"
+                  required
+                />
+              </label>
+              <label>
+                Password
+                <input
+                  type="password"
+                  id="password"
+                  autocomplete="current-password"
+                  required
+                />
+              </label>
+              <button type="submit">Sign in</button>
+              <p class="error" id="login-error" aria-live="polite"></p>
+            </form>
+          </section>
+
+          <section class="auth-card">
+            <h2>Create an account</h2>
+            <form id="register-form">
+              <label>
+                Display name
+                <input type="text" id="register-display" required />
+              </label>
+              <label>
+                City
+                <input type="text" id="register-city" required />
+              </label>
+              <label>
+                Username
+                <input type="text" id="register-username" required />
+              </label>
+              <label>
+                Password
+                <input type="password" id="register-password" required />
+              </label>
+              <button type="submit">Register</button>
+              <p class="error" id="register-error" aria-live="polite"></p>
+            </form>
+          </section>
         </div>
-      </section>
-    </main>
+      </main>
+    </div>
+
+    <!-- ======== INTRANET DASHBOARD ======== -->
+    <div class="intra hidden" id="dashboard">
+      <!-- Fixed icon sidebar -->
+      <nav class="icon-sidebar">
+        <a href="index.html" class="sidebar-logo" title="Home">
+          <svg viewBox="0 0 137.6 96.6" fill="#fff" width="30" height="24">
+            <path d="M0 71.2h50.7v25.4h25.3V50.7H25.4L76 0H50.7L0 50.7z"/>
+            <path d="M86.9 25.4 112.2 0H86.9z"/>
+            <path d="m112.2 25.4-25.3 25.3v25.3h25.3V50.7l25.4-25.3V0h-25.4zM137.6 50.7 112.2 76h25.4z"/>
+          </svg>
+        </a>
+        <div class="sidebar-nav">
+          <a href="index.html" class="sidebar-icon active" title="Profile">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
+            </svg>
+            <span class="icon-label">Profile</span>
+          </a>
+          <a href="elearning.html" class="sidebar-icon" title="E-learning">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="23 7 16 12 23 17 23 7"/><rect x="1" y="5" width="15" height="14" rx="2" ry="2"/>
+            </svg>
+            <span class="icon-label">E-learn</span>
+          </a>
+          <a href="project-list.html" class="sidebar-icon" title="Project List">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="8" y1="6" x2="21" y2="6"/><line x1="8" y1="12" x2="21" y2="12"/><line x1="8" y1="18" x2="21" y2="18"/>
+              <line x1="3" y1="6" x2="3.01" y2="6"/><line x1="3" y1="12" x2="3.01" y2="12"/><line x1="3" y1="18" x2="3.01" y2="18"/>
+            </svg>
+            <span class="icon-label">Projects</span>
+          </a>
+          <a href="tracks.html" class="sidebar-icon" title="Available Tracks">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+            </svg>
+            <span class="icon-label">Tracks</span>
+          </a>
+        </div>
+        <div class="sidebar-bottom">
+          <button class="sidebar-icon" id="logout-btn" title="Sign out">
+            <svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/>
+            </svg>
+            <span class="icon-label">Logout</span>
+          </button>
+        </div>
+      </nav>
+
+      <!-- Main content area -->
+      <div class="main-wrap">
+        <!-- Top bar -->
+        <header class="topbar">
+          <div class="topbar-search">
+            <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="#94a3b8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+            </svg>
+            <input type="search" id="task-search" placeholder="Search quests..." />
+          </div>
+          <div class="topbar-right">
+            <button type="button" id="export-btn" class="topbar-btn">
+              <svg viewBox="0 0 24 24" width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+              </svg>
+              Export
+            </button>
+            <button type="button" id="reset-btn" class="topbar-btn ghost">Reset</button>
+            <div class="topbar-user">
+              <span class="topbar-login" id="topbar-login">user</span>
+              <div class="topbar-avatar" id="topbar-avatar">NA</div>
+            </div>
+          </div>
+        </header>
+
+        <!-- Profile banner -->
+        <section class="profile-banner">
+          <div class="banner-overlay"></div>
+          <div class="banner-content">
+            <div class="banner-left">
+              <div class="profile-avatar-ring">
+                <div class="profile-avatar large" id="profile-avatar">NA</div>
+              </div>
+              <div class="profile-info">
+                <h2 class="profile-name" id="welcome">Welcome</h2>
+                <div class="profile-tags">
+                  <span class="tag-pill" id="profile-city">City</span>
+                  <span class="tag-pill" id="profile-status">Available</span>
+                  <span class="tag-pill" id="profile-role">Cadet</span>
+                </div>
+              </div>
+            </div>
+            <div class="banner-right">
+              <div class="level-badge" id="level-number">01</div>
+              <div class="level-bar-wrap">
+                <div class="level-label">
+                  <span id="level-percent">0% of level</span>
+                  <span class="level-cursus">UX-UI Pool</span>
+                </div>
+                <div class="level-track">
+                  <div class="level-fill" id="progress-bar" style="width:0%"></div>
+                </div>
+                <div class="level-meta" id="progress-meta">0% complete</div>
+              </div>
+            </div>
+          </div>
+          <div class="banner-stats">
+            <div class="bstat"><span class="bstat-val" id="stat-done">0</span><span class="bstat-lbl">Tasks done</span></div>
+            <div class="bstat"><span class="bstat-val" id="stat-remaining">0</span><span class="bstat-lbl">Remaining</span></div>
+            <div class="bstat"><span class="bstat-val" id="stat-projects">0/4</span><span class="bstat-lbl">Projects</span></div>
+            <div class="bstat"><span class="bstat-val" id="stat-streak">0</span><span class="bstat-lbl">Day streak</span></div>
+            <div class="bstat"><span class="bstat-val" id="stat-time">0h</span><span class="bstat-lbl">Time logged</span></div>
+          </div>
+        </section>
+
+        <!-- Dashboard grid -->
+        <div class="dash-grid">
+          <!-- Open projects widget -->
+          <section class="widget" id="open-projects-widget">
+            <div class="widget-head">
+              <h3>Open Projects</h3>
+              <a href="project-list.html" class="widget-link">All projects &rarr;</a>
+            </div>
+            <div class="open-projects-grid" id="project-browser-grid"></div>
+          </section>
+
+          <!-- Logtime / Calendar widget -->
+          <section class="widget">
+            <div class="widget-head">
+              <h3>Logtime</h3>
+              <span class="widget-meta" id="calendar-month"></span>
+            </div>
+            <div class="calendar-weekdays">
+              <span>Mon</span><span>Tue</span><span>Wed</span><span>Thu</span><span>Fri</span><span>Sat</span><span>Sun</span>
+            </div>
+            <div class="calendar-grid" id="calendar-grid"></div>
+          </section>
+
+          <!-- Quest progress widget -->
+          <section class="widget widget-full">
+            <div class="widget-head">
+              <h3>Quest Progress</h3>
+            </div>
+            <div id="section-progress"></div>
+          </section>
+
+          <!-- Figma analyzer widget -->
+          <section class="widget">
+            <div class="widget-head">
+              <h3>Figma Analyzer</h3>
+              <span class="widget-badge">Tool</span>
+            </div>
+            <p class="widget-note">Upload a <code>.fig</code> file to check color and typography consistency.</p>
+            <input type="file" id="figma-file" accept=".fig" />
+            <div class="figma-result" id="figma-result"></div>
+          </section>
+
+          <!-- Tasks checklist widget -->
+          <section class="widget widget-full">
+            <div class="widget-head">
+              <h3>Tasks</h3>
+            </div>
+            <div id="task-list"></div>
+          </section>
+        </div>
+
+        <footer class="intra-footer">
+          <span>&copy; UX-UI Pool Intranet</span>
+          <span>Progress saved locally in your browser</span>
+        </footer>
+      </div>
+    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/jszip@3.10.1/dist/jszip.min.js"></script>
     <script src="app.js"></script>
