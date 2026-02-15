@@ -145,15 +145,7 @@
           <section class="player-row" id="player-section">
             <div class="player-col-video">
               <div class="player-aspect">
-                <iframe
-                  id="yt-player"
-                  src=""
-                  title="YouTube video player"
-                  frameborder="0"
-                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  referrerpolicy="strict-origin-when-cross-origin"
-                  allowfullscreen
-                ></iframe>
+                <div id="yt-player"></div>
                 <div class="player-placeholder" id="player-placeholder">
                   <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="currentColor" stroke-width="1" stroke-linecap="round" stroke-linejoin="round">
                     <polygon points="5 3 19 12 5 21 5 3"/>
@@ -196,6 +188,19 @@
               <div class="notes-panel hidden" id="notes-panel">
                 <textarea id="video-notes" placeholder="Write your notes for this video..."></textarea>
                 <button class="btn-save-notes" id="btn-save-notes">Save notes</button>
+              </div>
+
+              <!-- Autoplay toggle -->
+              <div class="autoplay-wrap">
+                <span class="autoplay-label">Autoplay</span>
+                <button class="autoplay-toggle on" id="autoplay-toggle" role="switch" aria-checked="true" title="Autoplay is ON"></button>
+              </div>
+
+              <!-- Keyboard hints -->
+              <div class="kb-hints">
+                <span class="kb-hint"><kbd>N</kbd> Next</span>
+                <span class="kb-hint"><kbd>M</kbd> Watched</span>
+                <span class="kb-hint"><kbd>A</kbd> Autoplay</span>
               </div>
             </div>
           </section>

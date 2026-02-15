@@ -1,13 +1,14 @@
 /* ========================================================================
-   E-learning – Application Logic
-   YouTube-embedded video courses for the UX-UI Pool
-   FULL-WIDTH layout with horizontal course tabs & up-next playlist
+   E-learning – Application Logic  (42-intra inspired)
+   YouTube Player API · Auto-play · Course progress · Keyboard shortcuts
    ======================================================================== */
 "use strict";
 
 /* ── CONFIG ──────────────────────────────────────────────────────────────── */
-const ELEARN_WATCHED_KEY = "uxui_elearn_watched";
-const ELEARN_NOTES_KEY = "uxui_elearn_notes";
+const ELEARN_WATCHED_KEY  = "uxui_elearn_watched";
+const ELEARN_NOTES_KEY    = "uxui_elearn_notes";
+const ELEARN_LAST_KEY     = "uxui_elearn_last";      // last-played video id
+const ELEARN_AUTOPLAY_KEY = "uxui_elearn_autoplay";   // autoplay toggle
 
 /* ── COURSE & VIDEO DATA ─────────────────────────────────────────────────
    Each course groups related videos. YouTube IDs are used to build
@@ -324,11 +325,13 @@ const formatTotalTime = (secs) => {
 };
 
 /* ── STATE ───────────────────────────────────────────────────────────── */
-let activeCourse = "all";
-let activeVideoId = null;
-let filterTrack = "all";
+let activeCourse    = "all";
+let activeVideoId   = null;
+let filterTrack     = "all";
 let filterDifficulty = "all";
-let searchTerm = "";
+let searchTerm      = "";
+let ytPlayer        = null;   // YouTube IFrame API player instance
+let autoplayEnabled = localStorage.getItem(ELEARN_AUTOPLAY_KEY) !== "false"; // default ON
 
 /* ── CURRENT USER (read from localStorage, set by main app) ──────────── */
 const getCurrentUser = () => {
@@ -343,30 +346,43 @@ const getInitials = (name) => {
   return name.trim().split(/\s+/).slice(0, 2).map((p) => p[0].toUpperCase()).join("");
 };
 
-/* ── RENDER: Horizontal course tabs ──────────────────────────────────── */
+/* ── RENDER: Horizontal course tabs (with progress bars) ─────────────── */
 function renderCourseTabs() {
   const nav = $("course-nav");
   nav.innerHTML = "";
+  const watched = getWatched();
 
-  // "All" tab
-  const allTab = document.createElement("a");
+  // "All" tab — overall progress
+  const allVids   = getAllVideos();
+  const allDone   = allVids.filter((v) => watched.includes(v.id)).length;
+  const allPct    = allVids.length ? Math.round((allDone / allVids.length) * 100) : 0;
+
+  const allTab    = document.createElement("a");
   allTab.className = `elearn-tab${activeCourse === "all" ? " active" : ""}`;
   allTab.innerHTML = `
     <span class="elearn-tab-icon all">ALL</span>
-    <span>All Videos</span>
-    <span class="elearn-tab-count">${getAllVideos().length}</span>
+    <span class="elearn-tab-label">All Videos</span>
+    <span class="elearn-tab-count">${allVids.length}</span>
+    <span class="elearn-tab-progress" title="${allPct}% watched">
+      <span class="elearn-tab-progress-fill" style="width:${allPct}%"></span>
+    </span>
   `;
   allTab.addEventListener("click", () => { activeCourse = "all"; render(); });
   nav.appendChild(allTab);
 
   courses.forEach((course) => {
-    const tab = document.createElement("a");
-    const trackClass = course.track.toLowerCase();
+    const done    = course.videos.filter((v) => watched.includes(v.id)).length;
+    const pct     = course.videos.length ? Math.round((done / course.videos.length) * 100) : 0;
+    const trackCl = course.track.toLowerCase();
+    const tab     = document.createElement("a");
     tab.className = `elearn-tab${activeCourse === course.id ? " active" : ""}`;
     tab.innerHTML = `
-      <span class="elearn-tab-icon ${trackClass}">${course.icon}</span>
-      <span>${course.title}</span>
-      <span class="elearn-tab-count">${course.videos.length}</span>
+      <span class="elearn-tab-icon ${trackCl}">${course.icon}</span>
+      <span class="elearn-tab-label">${course.title}</span>
+      <span class="elearn-tab-count">${done}/${course.videos.length}</span>
+      <span class="elearn-tab-progress" title="${pct}% watched">
+        <span class="elearn-tab-progress-fill${pct === 100 ? " complete" : ""}" style="width:${pct}%"></span>
+      </span>
     `;
     tab.addEventListener("click", () => { activeCourse = course.id; render(); });
     nav.appendChild(tab);
@@ -511,37 +527,41 @@ function renderVideoGrid() {
   });
 }
 
-/* ── PLAY VIDEO ──────────────────────────────────────────────────────── */
+/* ── PLAY VIDEO (YouTube Player API) ──────────────────────────────────── */
 function playVideo(video) {
   activeVideoId = video.id;
+  localStorage.setItem(ELEARN_LAST_KEY, video.id);   // persist last-played
 
-  const iframe = $("yt-player");
   const placeholder = $("player-placeholder");
-  const title = $("player-title");
-  const desc = $("player-desc");
-  const trackBadge = $("player-track");
-  const difficulty = $("player-difficulty");
-  const duration = $("player-duration");
-  const notesPanel = $("notes-panel");
-  const notesArea = $("video-notes");
+  const title       = $("player-title");
+  const desc        = $("player-desc");
+  const trackBadge  = $("player-track");
+  const difficulty  = $("player-difficulty");
+  const duration    = $("player-duration");
+  const notesPanel  = $("notes-panel");
+  const notesArea   = $("video-notes");
 
-  // Set iframe src
-  iframe.src = ytEmbed(video.youtubeId);
+  // YouTube Player API — load or cue video
+  if (ytPlayer && typeof ytPlayer.loadVideoById === "function") {
+    ytPlayer.loadVideoById(video.youtubeId);
+  } else {
+    initYTPlayer(video.youtubeId);
+  }
   placeholder.classList.add("hidden");
 
   // Set info
-  title.textContent = video.title;
-  desc.textContent = video.description;
+  title.textContent      = video.title;
+  desc.textContent       = video.description;
   trackBadge.textContent = video.track;
   trackBadge.dataset.track = video.track;
   difficulty.textContent = video.difficulty;
-  duration.textContent = video.duration;
+  duration.textContent   = video.duration;
 
   // Watch button state
   updateWatchButton(video.id);
 
   // Load notes
-  const notes = getNotes();
+  const notes    = getNotes();
   notesArea.value = notes[video.id] || "";
   notesPanel.classList.add("hidden");
 
@@ -551,6 +571,113 @@ function playVideo(video) {
   // Re-render grid + up-next to highlight active
   renderVideoGrid();
   renderUpNext();
+}
+
+/* ── YOUTUBE IFRAME PLAYER API ───────────────────────────────────────── */
+function initYTPlayer(videoId) {
+  const container = $("yt-player");
+  // The API replaces a DIV with an iframe, so we need a fresh div
+  if (container.tagName === "IFRAME") {
+    const div = document.createElement("div");
+    div.id = "yt-player";
+    container.parentNode.replaceChild(div, container);
+  }
+
+  ytPlayer = new YT.Player("yt-player", {
+    videoId: videoId,
+    playerVars: {
+      rel: 0,
+      modestbranding: 1,
+      autoplay: 1,
+    },
+    events: {
+      onStateChange: onPlayerStateChange,
+    },
+  });
+}
+
+/** Called by YouTube API when the player state changes */
+function onPlayerStateChange(event) {
+  // YT.PlayerState.ENDED === 0
+  if (event.data === 0) {
+    // Auto-mark as watched
+    if (activeVideoId && !isWatched(activeVideoId)) {
+      toggleWatched(activeVideoId);
+      updateWatchButton(activeVideoId);
+      renderVideoGrid();
+      renderUpNext();
+      renderStats();
+      renderCourseTabs();
+    }
+
+    // Check for course completion
+    checkCourseCompletion();
+
+    // Auto-play next video
+    if (autoplayEnabled) {
+      const next = getNextVideo();
+      if (next) {
+        playVideo(next);
+      }
+    }
+  }
+}
+
+/** Get the next video in the current list */
+function getNextVideo() {
+  let videos;
+  if (activeCourse === "all") {
+    videos = getAllVideos();
+  } else {
+    const c = courses.find((c) => c.id === activeCourse);
+    videos = c ? c.videos.map((v) => ({ ...v, courseId: c.id, courseTitle: c.title, track: c.track })) : [];
+  }
+  const idx = videos.findIndex((v) => v.id === activeVideoId);
+  return idx >= 0 && idx < videos.length - 1 ? videos[idx + 1] : null;
+}
+
+/* ── COURSE COMPLETION CELEBRATION ───────────────────────────────────── */
+function checkCourseCompletion() {
+  const watched = getWatched();
+  courses.forEach((course) => {
+    const allDone = course.videos.every((v) => watched.includes(v.id));
+    const key = `uxui_elearn_celebrated_${course.id}`;
+    if (allDone && !localStorage.getItem(key)) {
+      localStorage.setItem(key, "1");
+      showCelebration(course.title);
+    }
+  });
+}
+
+function showCelebration(courseTitle) {
+  const overlay = document.createElement("div");
+  overlay.className = "celebration-overlay";
+  overlay.innerHTML = `
+    <div class="celebration-card">
+      <div class="celebration-icon">
+        <svg viewBox="0 0 24 24" width="48" height="48" fill="none" stroke="#00BABC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M12 15l-3 3m0 0l-3-3m3 3V3"/>
+          <path d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+        </svg>
+        <svg viewBox="0 0 24 24" width="56" height="56" fill="none" stroke="#00BABC" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M8.21 13.89L7 23l5-3 5 3-1.21-9.12"/>
+          <circle cx="12" cy="8" r="7"/>
+        </svg>
+      </div>
+      <h2 class="celebration-title">Course Complete!</h2>
+      <p class="celebration-text">You finished <strong>${courseTitle}</strong></p>
+      <p class="celebration-sub">All videos watched — great work!</p>
+      <button class="celebration-btn" id="celebration-close">Continue</button>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+  requestAnimationFrame(() => overlay.classList.add("show"));
+  const close = () => {
+    overlay.classList.remove("show");
+    setTimeout(() => overlay.remove(), 300);
+  };
+  overlay.querySelector("#celebration-close").addEventListener("click", close);
+  overlay.addEventListener("click", (e) => { if (e.target === overlay) close(); });
 }
 
 function updateWatchButton(videoId) {
@@ -606,10 +733,113 @@ function render() {
   renderUpNext();
   renderStats();
   renderUser();
+  renderAutoplayToggle();
+}
+
+/* ── RENDER: Autoplay toggle ─────────────────────────────────────────── */
+function renderAutoplayToggle() {
+  let toggle = $("autoplay-toggle");
+  if (!toggle) return;
+  toggle.classList.toggle("on", autoplayEnabled);
+  toggle.setAttribute("aria-checked", autoplayEnabled);
+  toggle.title = autoplayEnabled ? "Autoplay is ON" : "Autoplay is OFF";
+}
+
+/* ── LOAD YOUTUBE IFRAME API ─────────────────────────────────────────── */
+function loadYouTubeAPI() {
+  if (window.YT && window.YT.Player) return; // already loaded
+  const tag    = document.createElement("script");
+  tag.src      = "https://www.youtube.com/iframe_api";
+  const first  = document.getElementsByTagName("script")[0];
+  first.parentNode.insertBefore(tag, first);
+}
+
+// Called automatically by the YouTube IFrame API when ready
+window.onYouTubeIframeAPIReady = function () {
+  // If a video was already selected (e.g. session resume), init the player
+  if (activeVideoId) {
+    const video = getAllVideos().find((v) => v.id === activeVideoId);
+    if (video) initYTPlayer(video.youtubeId);
+  }
+};
+
+/* ── KEYBOARD SHORTCUTS ──────────────────────────────────────────────── */
+function initKeyboardShortcuts() {
+  document.addEventListener("keydown", (e) => {
+    // Ignore when typing in inputs / textarea
+    if (e.target.matches("input, textarea, select")) return;
+
+    switch (e.key.toLowerCase()) {
+      case "n": { // Next video
+        e.preventDefault();
+        const next = getNextVideo();
+        if (next) playVideo(next);
+        break;
+      }
+      case "m": { // Mark as watched
+        e.preventDefault();
+        if (!activeVideoId) return;
+        toggleWatched(activeVideoId);
+        updateWatchButton(activeVideoId);
+        renderVideoGrid();
+        renderUpNext();
+        renderStats();
+        renderCourseTabs();
+        break;
+      }
+      case "a": { // Toggle autoplay
+        e.preventDefault();
+        autoplayEnabled = !autoplayEnabled;
+        localStorage.setItem(ELEARN_AUTOPLAY_KEY, autoplayEnabled);
+        renderAutoplayToggle();
+        break;
+      }
+    }
+  });
+}
+
+/* ── SESSION RESUME — Restore last video on page load ────────────────── */
+function resumeSession() {
+  const lastId = localStorage.getItem(ELEARN_LAST_KEY);
+  if (!lastId) return;
+  const video = getAllVideos().find((v) => v.id === lastId);
+  if (!video) return;
+
+  // Set the active course to match the video's course
+  const course = courses.find((c) => c.videos.some((v) => v.id === lastId));
+  if (course) activeCourse = course.id;
+
+  // Set the video — don't autoplay on resume
+  activeVideoId = video.id;
+
+  // Display info without starting playback
+  const title      = $("player-title");
+  const desc       = $("player-desc");
+  const trackBadge = $("player-track");
+  const difficulty = $("player-difficulty");
+  const duration   = $("player-duration");
+
+  title.textContent      = video.title;
+  desc.textContent       = video.description;
+  trackBadge.textContent = video.track;
+  trackBadge.dataset.track = video.track;
+  difficulty.textContent = video.difficulty;
+  duration.textContent   = video.duration;
+
+  updateWatchButton(video.id);
+
+  const notes    = getNotes();
+  const area     = $("video-notes");
+  if (area) area.value = notes[video.id] || "";
 }
 
 /* ── INIT ────────────────────────────────────────────────────────────── */
 document.addEventListener("DOMContentLoaded", () => {
+  // Load YouTube IFrame API
+  loadYouTubeAPI();
+
+  // Restore last session before first render
+  resumeSession();
   render();
 
   // Search
@@ -639,6 +869,7 @@ document.addEventListener("DOMContentLoaded", () => {
     renderVideoGrid();
     renderUpNext();
     renderStats();
+    renderCourseTabs();
   });
 
   // Notes toggle
@@ -656,4 +887,17 @@ document.addEventListener("DOMContentLoaded", () => {
     saveNoteFor(activeVideoId, $("video-notes").value);
     $("notes-panel").classList.add("hidden");
   });
+
+  // Autoplay toggle button
+  const apToggle = $("autoplay-toggle");
+  if (apToggle) {
+    apToggle.addEventListener("click", () => {
+      autoplayEnabled = !autoplayEnabled;
+      localStorage.setItem(ELEARN_AUTOPLAY_KEY, autoplayEnabled);
+      renderAutoplayToggle();
+    });
+  }
+
+  // Keyboard shortcuts
+  initKeyboardShortcuts();
 });

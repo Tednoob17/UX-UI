@@ -126,6 +126,7 @@
   transition: color 0.15s, border-color 0.15s, background 0.12s;
   text-decoration: none;
   user-select: none;
+  position: relative;
 }
 .elearn-tab:hover {
   color: var(--ink);
@@ -136,6 +137,36 @@
   color: var(--accent);
   border-bottom-color: var(--accent);
   font-weight: 600;
+}
+
+.elearn-tab-label {
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* ── Tab progress bar ───────────────────────────────────────────────────── */
+.elearn-tab-progress {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--border-light);
+  overflow: hidden;
+  border-radius: 0 0 2px 2px;
+}
+.elearn-tab.active .elearn-tab-progress {
+  display: none; /* active tab has the accent border instead */
+}
+.elearn-tab-progress-fill {
+  display: block;
+  height: 100%;
+  background: var(--accent);
+  border-radius: 2px;
+  transition: width 0.4s ease;
+}
+.elearn-tab-progress-fill.complete {
+  background: var(--success);
 }
 
 .elearn-tab-icon {
@@ -702,4 +733,146 @@
   .video-grid {
     grid-template-columns: 1fr;
   }
+}
+
+/* ── Autoplay toggle ────────────────────────────────────────────────────── */
+.autoplay-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding-top: 10px;
+}
+.autoplay-label {
+  font-size: 0.78rem;
+  font-weight: 600;
+  color: var(--ink-3);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+.autoplay-toggle {
+  width: 36px;
+  height: 20px;
+  border-radius: 10px;
+  background: var(--border);
+  border: none;
+  cursor: pointer;
+  position: relative;
+  transition: background 0.2s;
+  padding: 0;
+}
+.autoplay-toggle::after {
+  content: "";
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 16px;
+  height: 16px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+  transition: transform 0.2s;
+}
+.autoplay-toggle.on {
+  background: var(--accent);
+}
+.autoplay-toggle.on::after {
+  transform: translateX(16px);
+}
+
+/* ── Keyboard shortcut hints ────────────────────────────────────────────── */
+.kb-hints {
+  display: flex;
+  gap: 12px;
+  padding: 10px 0 0;
+  margin-top: auto;
+}
+.kb-hint {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.68rem;
+  color: var(--ink-4);
+}
+.kb-hint kbd {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  font-family: var(--font);
+  font-size: 0.6rem;
+  font-weight: 600;
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 3px;
+  color: var(--ink-3);
+}
+
+/* ── Course completion celebration ──────────────────────────────────────── */
+.celebration-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  backdrop-filter: blur(4px);
+}
+.celebration-overlay.show {
+  opacity: 1;
+}
+.celebration-card {
+  background: var(--surface);
+  border-radius: 16px;
+  padding: 2.5rem 2rem;
+  text-align: center;
+  max-width: 380px;
+  width: 90%;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  transform: scale(0.9);
+  transition: transform 0.3s ease;
+}
+.celebration-overlay.show .celebration-card {
+  transform: scale(1);
+}
+.celebration-icon {
+  margin-bottom: 1rem;
+}
+.celebration-icon svg:first-child {
+  display: none;
+}
+.celebration-title {
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: var(--accent);
+  margin-bottom: 0.5rem;
+}
+.celebration-text {
+  font-size: 1rem;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+.celebration-sub {
+  font-size: 0.82rem;
+  color: var(--ink-3);
+  margin-bottom: 1.5rem;
+}
+.celebration-btn {
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  padding: 10px 32px;
+  border-radius: var(--radius-sm);
+  font-family: var(--font);
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background 0.15s;
+}
+.celebration-btn:hover {
+  background: var(--accent-light);
 }
