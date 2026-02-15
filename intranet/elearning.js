@@ -1,6 +1,7 @@
 /* ========================================================================
    E-learning – Application Logic
    YouTube-embedded video courses for the UX-UI Pool
+   FULL-WIDTH layout with horizontal course tabs & up-next playlist
    ======================================================================== */
 "use strict";
 
@@ -273,7 +274,10 @@ const courses = [
 /* ── HELPERS ─────────────────────────────────────────────────────────── */
 const $ = (id) => document.getElementById(id);
 
-const getAllVideos = () => courses.flatMap((c) => c.videos.map((v) => ({ ...v, courseId: c.id, courseTitle: c.title, track: c.track })));
+const getAllVideos = () =>
+  courses.flatMap((c) =>
+    c.videos.map((v) => ({ ...v, courseId: c.id, courseTitle: c.title, track: c.track }))
+  );
 
 const getWatched = () => {
   try { return JSON.parse(localStorage.getItem(ELEARN_WATCHED_KEY)) || []; }
@@ -304,6 +308,21 @@ const saveNoteFor = (videoId, text) => {
 const ytThumb = (youtubeId) => `https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`;
 const ytEmbed = (youtubeId) => `https://www.youtube.com/embed/${youtubeId}?rel=0&modestbranding=1`;
 
+/** Parse "mm:ss" to total seconds */
+const durationToSecs = (dur) => {
+  const parts = dur.split(":").map(Number);
+  return parts.length === 3 ? parts[0] * 3600 + parts[1] * 60 + parts[2]
+                             : parts[0] * 60 + parts[1];
+};
+
+/** Format total seconds as "Xh Ym" */
+const formatTotalTime = (secs) => {
+  const h = Math.floor(secs / 3600);
+  const m = Math.floor((secs % 3600) / 60);
+  if (h > 0) return `${h}h ${m}m`;
+  return `${m}m`;
+};
+
 /* ── STATE ───────────────────────────────────────────────────────────── */
 let activeCourse = "all";
 let activeVideoId = null;
@@ -324,33 +343,84 @@ const getInitials = (name) => {
   return name.trim().split(/\s+/).slice(0, 2).map((p) => p[0].toUpperCase()).join("");
 };
 
-/* ── RENDER: Course sidebar ──────────────────────────────────────────── */
-function renderCourseSidebar() {
+/* ── RENDER: Horizontal course tabs ──────────────────────────────────── */
+function renderCourseTabs() {
   const nav = $("course-nav");
   nav.innerHTML = "";
 
-  // "All" item
-  const allItem = document.createElement("a");
-  allItem.className = `elearn-course-item${activeCourse === "all" ? " active" : ""}`;
-  allItem.innerHTML = `
-    <span class="elearn-course-icon general">ALL</span>
-    <span class="elearn-course-label">All Videos</span>
-    <span class="elearn-course-count">${getAllVideos().length}</span>
+  // "All" tab
+  const allTab = document.createElement("a");
+  allTab.className = `elearn-tab${activeCourse === "all" ? " active" : ""}`;
+  allTab.innerHTML = `
+    <span class="elearn-tab-icon all">ALL</span>
+    <span>All Videos</span>
+    <span class="elearn-tab-count">${getAllVideos().length}</span>
   `;
-  allItem.addEventListener("click", () => { activeCourse = "all"; render(); });
-  nav.appendChild(allItem);
+  allTab.addEventListener("click", () => { activeCourse = "all"; render(); });
+  nav.appendChild(allTab);
 
   courses.forEach((course) => {
-    const item = document.createElement("a");
+    const tab = document.createElement("a");
     const trackClass = course.track.toLowerCase();
-    item.className = `elearn-course-item${activeCourse === course.id ? " active" : ""}`;
-    item.innerHTML = `
-      <span class="elearn-course-icon ${trackClass}">${course.icon}</span>
-      <span class="elearn-course-label">${course.title}</span>
-      <span class="elearn-course-count">${course.videos.length}</span>
+    tab.className = `elearn-tab${activeCourse === course.id ? " active" : ""}`;
+    tab.innerHTML = `
+      <span class="elearn-tab-icon ${trackClass}">${course.icon}</span>
+      <span>${course.title}</span>
+      <span class="elearn-tab-count">${course.videos.length}</span>
     `;
-    item.addEventListener("click", () => { activeCourse = course.id; render(); });
-    nav.appendChild(item);
+    tab.addEventListener("click", () => { activeCourse = course.id; render(); });
+    nav.appendChild(tab);
+  });
+}
+
+/* ── RENDER: Up-Next playlist ────────────────────────────────────────── */
+function renderUpNext() {
+  const list = $("up-next-list");
+  const container = $("up-next");
+  if (!list || !container) return;
+
+  // Determine the current course videos
+  let videos;
+  if (activeCourse === "all") {
+    videos = getAllVideos();
+  } else {
+    const c = courses.find((c) => c.id === activeCourse);
+    videos = c ? c.videos.map((v) => ({ ...v, courseId: c.id, courseTitle: c.title, track: c.track })) : [];
+  }
+
+  // Find the index of the active video
+  const idx = videos.findIndex((v) => v.id === activeVideoId);
+  // Show up to 4 videos after the current one
+  const upcoming = idx >= 0 ? videos.slice(idx + 1, idx + 5) : videos.slice(0, 4);
+
+  if (!upcoming.length) {
+    container.style.display = "none";
+    return;
+  }
+  container.style.display = "";
+  list.innerHTML = "";
+
+  upcoming.forEach((video) => {
+    const item = document.createElement("div");
+    const watched = isWatched(video.id);
+    item.className = `up-next-item${activeVideoId === video.id ? " active" : ""}`;
+    item.innerHTML = `
+      <div class="up-next-thumb">
+        <img src="${ytThumb(video.youtubeId)}" alt="${video.title}" loading="lazy" />
+        <span class="up-next-dur">${video.duration}</span>
+      </div>
+      <div class="up-next-info">
+        <div class="up-next-title">${video.title}</div>
+        <div class="up-next-meta">${video.track} · ${video.difficulty}</div>
+      </div>
+      <div class="up-next-watched ${watched ? "" : "hidden"}">
+        <svg viewBox="0 0 24 24" width="10" height="10" fill="none" stroke="#fff" stroke-width="3" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="20 6 9 17 4 12"/>
+        </svg>
+      </div>
+    `;
+    item.addEventListener("click", () => playVideo(video));
+    list.appendChild(item);
   });
 }
 
@@ -362,9 +432,15 @@ function renderVideoGrid() {
   const titleEl = $("video-list-title");
   grid.innerHTML = "";
 
-  let videos = activeCourse === "all"
-    ? getAllVideos()
-    : (() => { const c = courses.find((c) => c.id === activeCourse); return c ? c.videos.map((v) => ({ ...v, courseId: c.id, courseTitle: c.title, track: c.track })) : []; })();
+  let videos =
+    activeCourse === "all"
+      ? getAllVideos()
+      : (() => {
+          const c = courses.find((c) => c.id === activeCourse);
+          return c
+            ? c.videos.map((v) => ({ ...v, courseId: c.id, courseTitle: c.title, track: c.track }))
+            : [];
+        })();
 
   // Apply filters
   if (filterTrack !== "all") {
@@ -446,7 +522,6 @@ function playVideo(video) {
   const trackBadge = $("player-track");
   const difficulty = $("player-difficulty");
   const duration = $("player-duration");
-  const watchBtn = $("btn-mark-watched");
   const notesPanel = $("notes-panel");
   const notesArea = $("video-notes");
 
@@ -473,8 +548,9 @@ function playVideo(video) {
   // Scroll to player
   $("player-section").scrollIntoView({ behavior: "smooth", block: "start" });
 
-  // Re-render grid to highlight active
+  // Re-render grid + up-next to highlight active
   renderVideoGrid();
+  renderUpNext();
 }
 
 function updateWatchButton(videoId) {
@@ -490,9 +566,25 @@ function updateWatchButton(videoId) {
 function renderStats() {
   const allVideos = getAllVideos();
   const watched = getWatched();
+  const watchedCount = watched.filter((id) => allVideos.some((v) => v.id === id)).length;
+
   $("stat-total-videos").textContent = allVideos.length;
   $("stat-total-courses").textContent = courses.length;
-  $("stat-watched").textContent = watched.filter((id) => allVideos.some((v) => v.id === id)).length;
+  $("stat-watched").textContent = watchedCount;
+
+  // Progress %
+  const progressEl = $("stat-progress");
+  if (progressEl) {
+    const pct = allVideos.length ? Math.round((watchedCount / allVideos.length) * 100) : 0;
+    progressEl.textContent = pct + "%";
+  }
+
+  // Total duration
+  const durationEl = $("stat-total-duration");
+  if (durationEl) {
+    const totalSecs = allVideos.reduce((s, v) => s + durationToSecs(v.duration), 0);
+    durationEl.textContent = formatTotalTime(totalSecs);
+  }
 }
 
 /* ── RENDER: User info ───────────────────────────────────────────────── */
@@ -509,8 +601,9 @@ function renderUser() {
 
 /* ── MASTER RENDER ───────────────────────────────────────────────────── */
 function render() {
-  renderCourseSidebar();
+  renderCourseTabs();
   renderVideoGrid();
+  renderUpNext();
   renderStats();
   renderUser();
 }
@@ -544,6 +637,7 @@ document.addEventListener("DOMContentLoaded", () => {
     toggleWatched(activeVideoId);
     updateWatchButton(activeVideoId);
     renderVideoGrid();
+    renderUpNext();
     renderStats();
   });
 
